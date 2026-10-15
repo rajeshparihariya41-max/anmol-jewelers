@@ -11,6 +11,14 @@
     {
       "source": "/catalog/live/",
       "destination": "/catalog/live/index.html"
+    },
+    {
+      "source": "/assets/:path*",
+      "destination": "/catalog/live/assets/:path*"
+    },
+    {
+      "source": "/data.json",
+      "destination": "/catalog/live/data.json"
     }
   ],
   "headers": [
@@ -42,7 +50,25 @@
       ]
     },
     {
+      "source": "/assets/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    },
+    {
       "source": "/catalog/live/data.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    },
+    {
+      "source": "/data.json",
       "headers": [
         {
           "key": "Cache-Control",

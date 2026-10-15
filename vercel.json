@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "/",
+      "source": "/catalog/live",
       "destination": "/catalog/live/index.html"
     },
     {
@@ -21,7 +21,7 @@
       ]
     },
     {
-      "source": "/catalog/live/data.json",
+      "source": "/catalog/live/",
       "headers": [
         {
           "key": "Cache-Control",
@@ -30,7 +30,7 @@
       ]
     },
     {
-      "source": "/catalog/live.json",
+      "source": "/catalog/live/data.json",
       "headers": [
         {
           "key": "Cache-Control",

@@ -1,27 +1,6 @@
 <!doctype html>
 <html lang="en">
-  <head><style>
-@font-face {
-  font-family: "Optimistic";
-  font-style: normal;
-  font-weight: 400 600;
-  font-display: swap;
-  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Optimistic Mono";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
-}
-:where(html) {
-  font-family: "Optimistic", system-ui, sans-serif;
-}
-:where(code, pre, kbd, samp) {
-  font-family: "Optimistic Mono", ui-monospace, monospace;
-}
-</style>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Anmol Jewelers — Jewellery Catalogue</title>
@@ -261,7 +240,7 @@
       <header class="topbar">
         <div class="brand">
           <div class="brand-mark" aria-label="Anmol Jewelers">
-            <img src="/assets/images/anmol_logo_transparent.png" alt="Anmol Jewelers logo" />
+            <img src="assets/images/anmol_logo_transparent.png" alt="Anmol Jewelers logo" />
           </div>
           <div>
             <div class="shop-name" id="shop-name">Anmol Jewelers</div>
@@ -349,7 +328,7 @@
       <section class="quality">
         <div class="section-label">CERTIFIED QUALITY</div>
         <div class="seal">
-          <img src="/assets/images/bis-logo.png" alt="BIS hallmark logo" />
+          <img src="assets/images/bis-logo.png" alt="BIS hallmark logo" />
         </div>
         <h3>BIS Hallmark Certified</h3>
         <p>All jewellery certified by<br />Bureau of Indian Standards</p>
@@ -362,4 +341,495 @@
         <p id="footer-phone"></p>
         <div class="footer-actions">
           <button class="footer-wa" type="button" id="footer-wa">
-            <span class="action-label"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></pat
+            <span class="action-label"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.3 1.5 1.3 3 2.8 4s2.7 1.2 3.7.7l.8-1.1-2-1.1-.8.8c-.6-.2-1.5-1-1.8-1.6l.6-.8-1.1-1.9-1.2.4Z"></path></svg>WhatsApp</span>
+          </button>
+          <button class="footer-ig" type="button" id="footer-ig" hidden>
+            <span class="action-label"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.7" r="1"></circle></svg>Instagram</span>
+          </button>
+        </div>
+      </footer>
+    </main>
+
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Product details">
+      <div class="modal-sheet">
+        <div class="handle"></div>
+        <div class="detail-image" id="detail-image"></div>
+        <div class="detail-thumbs" id="detail-thumbs"></div>
+        <div class="detail-category" id="detail-category"></div>
+        <h2 class="detail-title" id="detail-title"></h2>
+        <div class="detail-value" id="detail-value"></div>
+        <div class="detail-grid" id="detail-grid"></div>
+        <p class="detail-notes" id="detail-notes" hidden></p>
+        <button class="ask" type="button" id="detail-wa">
+          <svg class="ui-icon button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.3 1.5 1.3 3 2.8 4s2.7 1.2 3.7.7l.8-1.1-2-1.1-.8.8c-.6-.2-1.5-1-1.8-1.6l.6-.8-1.1-1.9-1.2.4Z"></path></svg>
+          <span>Enquire on WhatsApp</span>
+        </button>
+        <button class="close" type="button" id="close-modal">Close</button>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+          const API_URL = '/api/live-catalog';
+          const CLOUDINARY_FALLBACK_URL = 'https://res.cloudinary.com/d.../raw/upload/v1/anmol-catalog/live-catalog.json'; // Auto fallback
+          const DEFAULT_SHOP = 'Anmol Jewelers';
+          const DEFAULT_OWNER = 'Rajesh';
+          const DEFAULT_PHONE = '9480405764';
+          const DEFAULT_ADDRESS = '#172 Nelagadaran Halli, Nagasandra Post, Bangalore 560073';
+          const INSTAGRAM_URL = 'https://www.instagram.com/anmol_jeweler?igsh=ZThxazRuYWMybWYz';
+        const fallbackCatalog = {
+            shopName: DEFAULT_SHOP,
+            ownerName: DEFAULT_OWNER,
+            phone: DEFAULT_PHONE,
+            address: DEFAULT_ADDRESS,
+            instagramUrl: INSTAGRAM_URL,
+          categories: [],
+          items: [],
+          metalRates: {},
+        };
+        let catalog = fallbackCatalog;
+        let activePurity = '22K • 916';
+        let activeCategoryId = 'all';
+        let selectedItem = null;
+        const favorites = new Set();
+        const purityOptions = [
+          { label: '22K • 916', purity: 916, key: 'goldRate' },
+          { label: '24K • 999', purity: 999, key: 'goldRate999' },
+          { label: '20K • 833', purity: 833, key: 'gold20k' },
+          { label: '18K • 750', purity: 750, key: 'gold18k' },
+          { label: '85% • 850', purity: 850, key: null },
+          { label: '75% • 750', purity: 750, key: 'gold18k' },
+        ];
+        const $ = (id) => document.getElementById(id);
+        const money = (value) => `₹${Math.round(Number(value) || 0).toLocaleString('en-IN')}`;
+        const weight = (value) => {
+          const number = Number(value);
+          return Number.isFinite(number) && number > 0 ? `${number.toFixed(2)}g` : '';
+        };
+        const escapeText = (value) => String(value ?? '');
+        const phoneDigits = (value) => {
+          const digits = String(value || '').replace(/\D/g, '');
+          return digits.length === 10 ? `91${digits}` : digits;
+        };
+        const openWhatsApp = (message) => {
+          const number = phoneDigits(catalog.phone || catalog.whatsappNumber || DEFAULT_PHONE);
+          const url = number
+            ? `https://wa.me/${number}?text=${encodeURIComponent(message)}`
+            : `https://wa.me/?text=${encodeURIComponent(message)}`;
+          window.open(url, '_blank', 'noopener,noreferrer');
+        };
+        const itemPhotos = (item) => {
+          const candidates = [
+            ...(Array.isArray(item.photoUrls) ? item.photoUrls : []),
+            ...(Array.isArray(item.photoUris) ? item.photoUris : []),
+            ...(item.photoUri ? [item.photoUri] : []),
+          ];
+          return [...new Set(candidates.filter((url) =>
+            typeof url === 'string' && /^https?:\/\//i.test(url.trim()),
+          ).map((url) => url.trim()))];
+        };
+        const normalizeCategory = (value) => String(value ?? '').trim().toLocaleLowerCase();
+        const itemMatchesCategory = (item, category) => {
+          const target = [category.id, category.name].map(normalizeCategory).filter(Boolean);
+          const values = [item.categoryId, item.category, item.categoryName].map(normalizeCategory).filter(Boolean);
+          // FIXED: Check exact match OR partial includes for robustness
+          return values.some((value) => 
+            value && (target.includes(value) || target.some(t => value.includes(t) || t.includes(value)))
+          );
+        };
+        const categoryName = (item) => {
+          const category = (catalog.categories || []).find((entry) => itemMatchesCategory(item, entry));
+          return category?.name || item.categoryName || item.category || 'Jewellery';
+        };
+        const getItemRate = (item) => {
+          const rates = catalog.metalRates || {};
+          const purity = String(item.purity || '').trim().toUpperCase().replace(/\s+/g, '');
+          const rateKey = {
+            '24K': 'goldRate999', '999': 'goldRate999', '24K999': 'goldRate999',
+            '22K': 'goldRate', '916': 'goldRate', '22K916': 'goldRate',
+            '20K': 'gold20k', '833': 'gold20k', '20K833': 'gold20k',
+            '18K': 'gold18k', '750': 'gold18k', '18K750': 'gold18k',
+            '999SILVER': 'silverRate999', '925SILVER': 'silverRate',
+            'PLAINSILVER': 'silverPlain',
+          }[purity];
+          const manualRate = Number(item.manualRate || 0);
+          const legacyRate = Number(item.ratePerGram || 0);
+          const rate = manualRate > 0
+            ? manualRate
+            : legacyRate > 0
+              ? legacyRate
+              : Number(rateKey ? rates[rateKey] : 0) || 0;
+          return rate;
+        };
+        const calculateItemValue = (item) => {
+          const rate = getItemRate(item);
+          if (!(rate > 0)) return Math.round(Number(item.approxPrice) || 0);
+          const net = Number(item.netWeight ?? item.weight ?? 0);
+          if (!(net > 0)) return Math.round(Number(item.approxPrice) || 0);
+          const base = net * rate;
+          return Math.round(base + base * (Number(item.wastagePercent || 0) / 100) + base * (Number(item.makingChargePercent || 0) / 100));
+        };
+
+        function renderHeader() {
+          const name = catalog.shopName || DEFAULT_SHOP;
+          $('shop-name').textContent = name;
+          $('footer-name').textContent = name;
+          $('footer-owner').textContent = DEFAULT_OWNER;
+          $('footer-address').textContent = DEFAULT_ADDRESS;
+          $('footer-phone').textContent = DEFAULT_PHONE;
+          const instagram = INSTAGRAM_URL;
+          $('instagram-button').hidden = !instagram;
+          $('footer-ig').hidden = !instagram;
+          if (instagram) {
+            $('instagram-button').onclick = () => window.open(instagram, '_blank', 'noopener,noreferrer');
+            $('footer-ig').onclick = () => window.open(instagram, '_blank', 'noopener,noreferrer');
+          }
+        }
+
+        function renderBanners() {
+          // FIXED: Support both banners and promoBanners, and handle missing active flag
+          let banners = catalog.banners || catalog.promoBanners || catalog.backdrops || [];
+          // If no banners array, create default from categories if needed
+          if (!Array.isArray(banners)) banners = [];
+          // Filter active - if active field missing, consider active
+          const activeBanners = banners.filter((b) => b.active !== false);
+          const node = $('banners');
+          node.replaceChildren();
+          // FIXED: Don't hide if no banners - show default welcome banner if needed
+          if (activeBanners.length === 0) {
+            // Show at least shop info as banner if nothing
+            node.hidden = true;
+            return;
+          }
+          node.hidden = false;
+          activeBanners.forEach((banner) => {
+            const card = document.createElement('article');
+            card.className = 'banner';
+            const art = document.createElement('div');
+            art.className = 'banner-art';
+            const imgUrl = banner.imageUri || banner.imageUrl || banner.image || banner.photoUrl;
+            if (imgUrl) {
+              const image = document.createElement('img');
+              image.src = imgUrl;
+              image.alt = banner.title || 'Catalogue banner';
+              image.loading = 'lazy';
+              image.onerror = () => { image.remove(); art.textContent = '✦'; };
+              art.append(image);
+            } else {
+              art.textContent = '✦';
+            }
+            const copy = document.createElement('div');
+            copy.className = 'banner-copy';
+            const title = banner.title || banner.name || 'Special Offer';
+            const subtitle = banner.subtitle || banner.description || '';
+            const offer = banner.offerText || banner.offer || '';
+            copy.innerHTML = `<strong>${escapeText(title)}</strong><span>${escapeText(subtitle)}</span><b>${escapeText(offer)}</b>`;
+            card.append(art, copy);
+            node.append(card);
+          });
+        }
+
+        function renderCategories() {
+          const node = $('categories');
+          node.replaceChildren();
+          const all = document.createElement('button');
+          all.className = `pill${activeCategoryId === 'all' ? ' active' : ''}`;
+          all.textContent = 'All Jewellery';
+          all.type = 'button';
+          all.onclick = () => {
+            activeCategoryId = 'all';
+            renderCategories();
+            renderProducts();
+          };
+          node.append(all);
+          (catalog.categories || []).forEach((category) => {
+            const pill = document.createElement('button');
+            pill.className = `pill${activeCategoryId === category.id ? ' active' : ''}`;
+            pill.textContent = category.name;
+            pill.type = 'button';
+            pill.onclick = () => {
+              activeCategoryId = category.id;
+              renderCategories();
+              renderProducts();
+            };
+            node.append(pill);
+          });
+        }
+
+        function renderProducts() {
+          const node = $('products');
+          node.replaceChildren();
+          const allItems = Array.isArray(catalog.items) ? catalog.items : [];
+          const activeCategory = (catalog.categories || []).find(
+            (category) => normalizeCategory(category.id) === normalizeCategory(activeCategoryId),
+          );
+          let items;
+          if (activeCategoryId === 'all') {
+            items = allItems;
+          } else if (activeCategory) {
+            items = allItems.filter((item) => itemMatchesCategory(item, activeCategory));
+            // FIXED: If filter returns 0 but we have items, try loose matching by name
+            if (items.length === 0 && allItems.length > 0) {
+              const catNameLower = normalizeCategory(activeCategory.name);
+              items = allItems.filter((it) => 
+                normalizeCategory(it.categoryId).includes(catNameLower) ||
+                normalizeCategory(it.categoryName).includes(catNameLower) ||
+                normalizeCategory(it.category).includes(catNameLower)
+              );
+            }
+          } else {
+            // FIXED: If activeCategory not found (id mismatch), try find by id directly
+            items = allItems.filter((it) => normalizeCategory(it.categoryId) === normalizeCategory(activeCategoryId));
+            if (items.length === 0) {
+              // Show all if category not found, instead of 0
+              items = allItems;
+            }
+          }
+          $('collection-count').textContent = `${items.length} designs`;
+          $('empty').hidden = items.length > 0;
+          items.forEach((item) => {
+            const card = document.createElement('article');
+            card.className = 'card';
+            const frame = document.createElement('div');
+            frame.className = 'image-frame';
+            const heart = document.createElement('button');
+            heart.className = `heart${favorites.has(item.id) ? ' favorited' : ''}`;
+            heart.type = 'button';
+            heart.setAttribute('aria-label', 'Favourite');
+            heart.textContent = favorites.has(item.id) ? '♥' : '♡';
+            heart.onclick = (event) => {
+              event.stopPropagation();
+              favorites.has(item.id) ? favorites.delete(item.id) : favorites.add(item.id);
+              renderProducts();
+            };
+            frame.append(heart);
+            const photos = itemPhotos(item);
+            if (photos[0]) {
+              const image = document.createElement('img');
+              image.className = 'photo';
+              image.alt = item.name || 'Jewellery item';
+              image.loading = 'lazy';
+              let photoIndex = 0;
+              image.src = photos[photoIndex];
+              image.onerror = () => {
+                photoIndex++;
+                if (photoIndex < photos.length) image.src = photos[photoIndex];
+                else image.replaceWith(Object.assign(document.createElement('div'), { className: 'no-photo', textContent: '✧' }));
+              };
+              frame.append(image);
+            } else {
+              const placeholder = document.createElement('div');
+              placeholder.className = 'no-photo';
+              placeholder.textContent = '✧';
+              frame.append(placeholder);
+            }
+            card.append(frame);
+            const body = document.createElement('div');
+            body.className = 'card-body';
+            body.innerHTML = `<div class="item-category">${escapeText(categoryName(item))}</div><div class="item-name">${escapeText(item.name || 'Jewellery item')}</div><div class="item-meta">${escapeText([weight(item.netWeight ?? item.weight), item.purity].filter(Boolean).join(' · '))}</div><div class="item-price">${money(calculateItemValue(item))}<small> approx.</small></div>`;
+            const ask = document.createElement('button');
+            ask.className = 'ask';
+            ask.type = 'button';
+            ask.innerHTML = `<svg class="ui-icon button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.3 1.5 1.3 3 2.8 4s2.7 1.2 3.7.7l.8-1.1-2-1.1-.8.8c-.6-.2-1.5-1-1.8-1.6l.6-.8-1.1-1.9-1.2.4Z"></path></svg><span>WhatsApp enquiry</span>`;
+            ask.onclick = (event) => {
+              event.stopPropagation();
+              openWhatsApp(`Namaste! *${catalog.shopName || DEFAULT_SHOP}* — mujhe "${item.name || 'jewellery item'}" ke baare me jaankari chahiye. (Catalogue se)`);
+            };
+            body.append(ask);
+            card.append(body);
+            card.onclick = () => openDetail(item);
+            node.append(card);
+          });
+        }
+
+        function getRate(option) {
+          const rates = catalog.metalRates || {};
+          // FIXED: Try direct key, then fallback to goldRate999 calculation, then goldRate, then any available rate
+          let rate = Number(rates[option.key] || 0);
+          if (rate > 0) return rate;
+          // Fallback: calculate from 999 rate
+          const gold999 = Number(rates.goldRate999 || rates.goldRate || 0);
+          if (gold999 > 0) {
+            return Math.round((gold999 * option.purity) / 999);
+          }
+          // Last fallback: try any gold rate available
+          const anyRate = Number(rates.goldRate || rates.gold20k || rates.gold18k || 0);
+          if (anyRate > 0) return anyRate;
+          return 0;
+        }
+        
+
+        function renderCalculator() {
+          const rates = catalog.metalRates || {};
+          const deduction = Number(catalog.oldGoldDeductionPercent) || 2;
+          const option = purityOptions.find((entry) => entry.label === activePurity) || purityOptions[0];
+          const current = getRate(option);
+          const oldRate = Math.round(current * (1 - deduction / 100));
+          const received = Math.round(option.purity * (1 - deduction / 100));
+          $('purities').replaceChildren();
+          purityOptions.forEach((entry) => {
+            const button = document.createElement('button');
+            button.className = `purity${entry.label === activePurity ? ' active' : ''}`;
+            button.textContent = entry.label;
+            button.type = 'button';
+            button.onclick = () => {
+              activePurity = entry.label;
+              renderCalculator();
+            };
+            $('purities').append(button);
+          });
+          $('current-rate-label').textContent = `Current ${activePurity} rate`;
+          $('deduction-note').textContent = `Less ${deduction}% for old gold`;
+          $('current-rate').textContent = `${money(current)}/g`;
+          $('payable-purity').textContent = `Payable purity ≈ ${received / 10}%`;
+          $('old-rate').textContent = `${money(oldRate)}/g`;
+          updateEstimate(oldRate);
+          $('old-gold-button').onclick = () => {
+            const value = $('weight').value || 'To be confirmed';
+            const estimate = Number(value) > 0 ? money(Number(value) * oldRate) : 'To be confirmed';
+            openWhatsApp(`Hello ${catalog.shopName || DEFAULT_SHOP}, I want to sell old gold.\nPurity: ${activePurity}\nNet weight: ${value} g\nOld gold rate: ${money(oldRate)}/g\nEstimated value: ${estimate}\n\nFinal value will be confirmed after physical verification.`);
+          };
+        }
+
+        function updateEstimate(oldRate) {
+          const value = Number($('weight').value) || 0;
+          $('estimate').hidden = value <= 0;
+          $('estimate-value').textContent = money(value * oldRate);
+        }
+
+        function renderDetailPhoto(image) {
+          const container = $('detail-image');
+          container.replaceChildren();
+          if (!image) {
+            container.textContent = '✧';
+            return;
+          }
+          const node = document.createElement('img');
+          node.alt = selectedItem?.name || 'Jewellery item';
+          const sources = [image, ...itemPhotos(selectedItem || {}).filter((url) => url !== image)];
+          let sourceIndex = 0;
+          node.src = sources[sourceIndex];
+          node.onerror = () => {
+            sourceIndex++;
+            if (sourceIndex < sources.length) node.src = sources[sourceIndex];
+            else container.textContent = '✧';
+          };
+          container.append(node);
+        }
+
+        function openDetail(item) {
+          selectedItem = item;
+          const photos = itemPhotos(item);
+          renderDetailPhoto(photos[0]);
+          const thumbs = $('detail-thumbs');
+          thumbs.replaceChildren();
+          photos.forEach((photo, index) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'detail-thumb-button';
+            button.setAttribute('aria-label', `View photo ${index + 1}`);
+            const thumb = document.createElement('img');
+            thumb.className = `detail-thumb${index === 0 ? ' active' : ''}`;
+            thumb.src = photo;
+            thumb.alt = `${item.name || 'Jewellery item'} photo ${index + 1}`;
+            thumb.loading = 'lazy';
+            button.onclick = () => {
+              renderDetailPhoto(photo);
+              thumbs.querySelectorAll('.detail-thumb').forEach((entry) => entry.classList.remove('active'));
+              thumb.classList.add('active');
+            };
+            button.append(thumb);
+            thumbs.append(button);
+          });
+          thumbs.hidden = photos.length < 2;
+          $('detail-category').textContent = categoryName(item);
+          $('detail-title').textContent = item.name || 'Jewellery item';
+          $('detail-value').textContent = money(calculateItemValue(item));
+          const rate = getItemRate(item);
+          const detailRows = [
+            ['Purity', item.purity || '—'],
+            ['Rate / gram', rate > 0 ? money(rate) : '—'],
+            ['Gross weight', weight(item.grossWeight)],
+            ['Net weight', weight(item.netWeight ?? item.weight)],
+            ['Making', `${Number(item.makingChargePercent || 0)}%`],
+            ['Wastage', `${Number(item.wastagePercent || 0)}%`],
+          ];
+          const detailGrid = $('detail-grid');
+          detailGrid.replaceChildren();
+          detailRows.forEach(([label, value]) => {
+            const cell = document.createElement('div');
+            cell.className = 'detail-cell';
+            cell.innerHTML = `<small>${escapeText(label)}</small><strong>${escapeText(value || '—')}</strong>`;
+            detailGrid.append(cell);
+          });
+          const notes = $('detail-notes');
+          notes.textContent = item.notes || '';
+          notes.hidden = !item.notes;
+          $('modal').classList.add('open');
+          $('detail-wa').onclick = () => openWhatsApp(`Namaste! I want details for ${item.name || 'this jewellery item'}.`);
+        }
+
+        async function loadCatalog() {
+          try {
+            // FIXED: Fetch with no-cache and handle both wrapped and direct JSON
+            const response = await fetch(`${API_URL}?t=${Date.now()}`, { 
+              cache: 'no-store',
+              headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+            });
+            if (!response.ok) throw new Error('Catalogue अभी publish नहीं हुआ है. Status: ' + response.status);
+            const payload = await response.json();
+            // FIXED: Handle multiple payload structures
+            if (payload.items && Array.isArray(payload.items)) {
+              catalog = payload; // Direct structure
+            } else if (payload.catalog && payload.catalog.items) {
+              catalog = payload.catalog; // Wrapped structure
+            } else if (payload.data && payload.data.items) {
+              catalog = payload.data; // Another wrapped
+            } else {
+              catalog = payload;
+            }
+            console.log('Catalog loaded:', catalog.items?.length, 'items, categories:', catalog.categories?.length);
+            $('status').hidden = true;
+            // FIXED: Show collection count immediately
+            if (catalog.items && catalog.items.length > 0) {
+              $('status').textContent = `${catalog.items.length} designs loaded`;
+              setTimeout(() => { $('status').hidden = true; }, 2000);
+            }
+          } catch (error) {
+            console.error('Catalog load failed:', error);
+            catalog = fallbackCatalog;
+            $('status').textContent = 'Catalogue update होते ही यहाँ आपके designs दिखेंगे. Error: ' + (error.message || 'unknown');
+            // Keep status visible for 3 sec then hide
+            setTimeout(() => { if (catalog.items.length === 0) $('status').textContent = 'New designs coming soon - Admin se publish karein'; }, 1000);
+          }
+          renderHeader();
+          renderBanners();
+          renderCategories();
+          renderProducts();
+          renderCalculator();
+        }
+
+        $('weight').addEventListener('input', () => {
+          const option = purityOptions.find((entry) => entry.label === activePurity) || purityOptions[0];
+          updateEstimate(Math.round(getRate(option) * (1 - (Number(catalog.oldGoldDeductionPercent) || 2) / 100)));
+        });
+        $('share-button').onclick = async () => {
+          const url = window.location.href;
+          const text = `${catalog.shopName || DEFAULT_SHOP} catalogue\n${url}`;
+          if (navigator.share) {
+            try { await navigator.share({ title: `${catalog.shopName || DEFAULT_SHOP} Catalogue`, text, url }); return; }
+            catch (err) { if (err && err.name === 'AbortError') return; }
+          }
+          try {
+            if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(url); alert('Catalogue link copy ho gaya!'); }
+            else { window.prompt('Link copy kar lijiye:', url); }
+          } catch (err) { window.prompt('Link copy kar lijiye:', url); }
+        };
+        $('footer-wa').onclick = () => openWhatsApp(`Hello ${catalog.shopName || DEFAULT_SHOP}, I saw your jewellery catalogue.`);
+        $('close-modal').onclick = () => $('modal').classList.remove('open');
+        $('modal').onclick = (event) => { if (event.target === $('modal')) $('modal').classList.remove('open'); };
+        loadCatalog();
+      })();
+    </script>
+  </body>
+</html>

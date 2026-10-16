@@ -52,6 +52,7 @@
         --whatsapp: #2b5b52;
         --shadow: 0 14px 34px rgba(43, 91, 82, 0.08);
       }
+
       * { box-sizing: border-box; }
       html { background: var(--background); }
       body {
@@ -276,4 +277,89 @@
           </button>
         </div>
       </header>
-<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request"
+
+      <section class="hero">
+        <div>
+          <div class="eyebrow">ANMOL JEWELERS</div>
+          <h1>Jewellery Catalogue</h1>
+          <p class="hero-sub">Browse our latest collection before you visit us.</p>
+        </div>
+        <div class="hero-badge">✦<br />Anmol</div>
+      </section>
+
+      <div id="banners" class="banner-row" hidden></div>
+      <nav id="categories" class="category-row" aria-label="Catalogue categories"></nav>
+
+      <section>
+        <div class="section-heading">
+          <div>
+            <h2>Our collection</h2>
+            <p id="collection-count">0 designs</p>
+          </div>
+        </div>
+        <div id="products" class="grid"></div>
+        <div id="empty" class="empty" hidden>
+          <div class="empty-mark">✦</div>
+          <h3>New designs coming soon</h3>
+          <p>Catalogue update होते ही यहाँ आपके jewellery designs दिखेंगे.</p>
+        </div>
+        <p id="status" class="status">Catalogue load हो रहा है…</p>
+      </section>
+
+      <section class="old-gold">
+        <div class="old-header">
+            <div class="calc-icon">
+              <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2M8 18h8"></path></svg>
+            </div>
+          <div>
+            <h2>Sell Old Gold</h2>
+            <p>Instant estimate · transparent rate</p>
+          </div>
+        </div>
+        <div class="old-body">
+          <label class="field-label">SELECT PURITY</label>
+          <div id="purities" class="purity-row"></div>
+          <div class="rate-row">
+            <div>
+              <div class="rate-label" id="current-rate-label">Current 22K • 916 rate</div>
+              <div class="rate-note" id="deduction-note">Less 2% for old gold</div>
+            </div>
+            <div class="rate-value" id="current-rate">₹0/g</div>
+          </div>
+          <div class="rate-row out">
+            <div>
+              <div class="rate-label">Your old gold rate</div>
+              <div class="rate-note" id="payable-purity">Payable purity ≈ 89.8%</div>
+            </div>
+            <div class="rate-value green" id="old-rate">₹0/g</div>
+          </div>
+          <label class="field-label" for="weight" style="margin-top:16px">NET WEIGHT (GRAMS)</label>
+          <input id="weight" class="weight-input" inputmode="decimal" placeholder="Enter weight in grams" />
+          <div class="estimate" id="estimate" hidden>
+            <span class="estimate-label">Estimated value</span>
+            <span class="estimate-value" id="estimate-value">₹0</span>
+          </div>
+          <button class="whatsapp" type="button" id="old-gold-button">
+            <span class="action-label"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.3 1.5 1.3 3 2.8 4s2.7 1.2 3.7.7l.8-1.1-2-1.1-.8.8c-.6-.2-1.5-1-1.8-1.6l.6-.8-1.1-1.9-1.2.4Z"></path></svg>Get price on WhatsApp</span>
+          </button>
+          <p class="disclaimer">Final value subject to physical verification at store</p>
+        </div>
+      </section>
+
+      <section class="quality">
+        <div class="section-label">CERTIFIED QUALITY</div>
+        <div class="seal">
+          <img src="/assets/images/bis-logo.png" alt="BIS hallmark logo" />
+        </div>
+        <h3>BIS Hallmark Certified</h3>
+        <p>All jewellery certified by<br />Bureau of Indian Standards</p>
+      </section>
+
+      <footer>
+        <h2 id="footer-name">Anmol Jewelers</h2>
+        <p id="footer-owner"></p>
+        <p id="footer-address"></p>
+        <p id="footer-phone"></p>
+        <div class="footer-actions">
+          <button class="footer-wa" type="button" id="footer-wa">
+            <span class="action-label"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></pat

@@ -70,10 +70,17 @@
       .ui-icon { width: 17px; height: 17px; display: block; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
       .button-icon { width: 15px; height: 15px; flex: 0 0 15px; }
       .hero {
-        min-height: 150px; margin: 16px; padding: 22px 20px; border-radius: 22px;
-        background: var(--mint); display: flex; align-items: center; justify-content: space-between;
-        gap: 20px;
+        height: 240px; min-height: 240px; margin: 12px 16px 8px; padding: 0; border-radius: 18px;
+        background: var(--mint); display: block; position: relative; overflow: hidden;
+        border: 1px solid var(--border);
       }
+      .hero-track { display: flex; height: 100%; transition: transform 0.5s ease; }
+      .hero-slide { min-width: 100%; height: 100%; position: relative; flex-shrink: 0; }
+      .hero-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .hero-slide-default { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 100%; padding: 22px 20px; }
+      .hero-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; }
+      .hero-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.6); border: 0; }
+      .hero-dot.active { width: 22px; border-radius: 10px; background: #fff; }
       .eyebrow, .section-label {
         color: var(--primary); font-size: 10px; font-weight: 750; letter-spacing: 2px;
       }
@@ -257,13 +264,9 @@
         </div>
       </header>
 
-      <section class="hero">
-        <div>
-          <div class="eyebrow">ANMOL JEWELERS</div>
-          <h1>Jewellery Catalogue</h1>
-          <p class="hero-sub">Browse our latest collection before you visit us.</p>
-        </div>
-        <div class="hero-badge">✦<br />Anmol</div>
+      <section class="hero" aria-label="Banner">
+        <div class="hero-track" id="hero-track"></div>
+        <div class="hero-dots" id="hero-dots"></div>
       </section>
 
       <div id="banners" class="banner-row" hidden></div>
@@ -287,9 +290,7 @@
 
       <section class="old-gold">
         <div class="old-header">
-            <div class="calc-icon">
-              <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2M8 18h8"></path></svg>
-            </div>
+            <div class="calc-icon"><svg viewBox="0 0 48 48" width="44" height="44" style="display:block"><defs><radialGradient id="goldGrad" cx="0.35" cy="0.35" r="0.7"><stop offset="0%" stop-color="#FFF8DC"/><stop offset="25%" stop-color="#FFD700"/><stop offset="60%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#B8860B"/></radialGradient></defs><circle cx="24" cy="24" r="20" fill="url(#goldGrad)" stroke="#8B6914" stroke-width="1.5"/><circle cx="24" cy="24" r="14" fill="none" stroke="#8B6914" stroke-width="1" opacity="0.5"/><text x="24" y="30" text-anchor="middle" font-size="20" font-weight="800" fill="#5C4A00" font-family="Georgia, serif">₹</text></svg></div>
           <div>
             <h2>Sell Old Gold</h2>
             <p>Instant estimate · transparent rate</p>
@@ -375,8 +376,9 @@
           const DEFAULT_SHOP = 'Anmol Jewelers';
           const DEFAULT_OWNER = 'Rajesh';
           const DEFAULT_PHONE = '9480405764';
+        const FIXED_WA = '919480405764';
           const DEFAULT_ADDRESS = '#172 Nelagadaran Halli, Nagasandra Post, Bangalore 560073';
-          const INSTAGRAM_URL = 'https://www.instagram.com/anmol_jeweler?igsh=ZThxazRuYWMybWYz';
+          const INSTAGRAM_URL = 'https://www.instagram.com/anmol_jeweler?cplk=ZThxazRuYWMybWYz';
         const fallbackCatalog = {
             shopName: DEFAULT_SHOP,
             ownerName: DEFAULT_OWNER,
@@ -412,7 +414,7 @@
           return digits.length === 10 ? `91${digits}` : digits;
         };
         const openWhatsApp = (message) => {
-          const number = phoneDigits(catalog.phone || catalog.whatsappNumber || DEFAULT_PHONE);
+          const number = '919480405764'; // FIXED: 9480405764
           const url = number
             ? `https://wa.me/${number}?text=${encodeURIComponent(message)}`
             : `https://wa.me/?text=${encodeURIComponent(message)}`;
@@ -481,53 +483,63 @@
           $('instagram-button').hidden = !instagram;
           $('footer-ig').hidden = !instagram;
           if (instagram) {
-            $('instagram-button').onclick = () => window.open(instagram, '_blank', 'noopener,noreferrer');
-            $('footer-ig').onclick = () => window.open(instagram, '_blank', 'noopener,noreferrer');
+            $('instagram-button').onclick = () => {
+              const instaUrl = 'https://www.instagram.com/anmol_jeweler?cplk=ZThxazRuYWMybWYz';
+              // FIX for ERR_UNKNOWN_URL_SCHEME - open in external browser
+              const a = document.createElement('a');
+              a.href = instaUrl;
+              a.target = '_blank';
+              a.rel = 'noopener noreferrer';
+              document.body.appendChild(a);
+              a.click();
+              setTimeout(()=>a.remove(), 100);
+            };
+            $('footer-ig').onclick = () => {
+              const instaUrl = 'https://www.instagram.com/anmol_jeweler?cplk=ZThxazRuYWMybWYz';
+              const a = document.createElement('a');
+              a.href = instaUrl;
+              a.target = '_blank';
+              a.rel = 'noopener noreferrer';
+              document.body.appendChild(a);
+              a.click();
+              setTimeout(()=>a.remove(), 100);
+            };
           }
         }
 
         function renderBanners() {
-          // FIXED: Support both banners and promoBanners, and handle missing active flag
-          let banners = catalog.banners || catalog.promoBanners || catalog.backdrops || [];
-          // If no banners array, create default from categories if needed
-          if (!Array.isArray(banners)) banners = [];
-          // Filter active - if active field missing, consider active
-          const activeBanners = banners.filter((b) => b.active !== false);
-          const node = $('banners');
-          node.replaceChildren();
-          // FIXED: Don't hide if no banners - show default welcome banner if needed
-          if (activeBanners.length === 0) {
-            // Show at least shop info as banner if nothing
-            node.hidden = true;
-            return;
+          var hero = document.querySelector('.hero');
+          var track = document.getElementById('hero-track');
+          var dots = document.getElementById('hero-dots');
+          function showDefault(slide){
+            slide.innerHTML = '<div class="hero-slide-default"><div><div class="eyebrow">ANMOL JEWELERS</div><h1>Jewellery Catalogue</h1><p class="hero-sub">Browse our latest collection before you visit us.</p></div><div class="hero-badge">\u2726<br/>Anmol</div></div>';
           }
-          node.hidden = false;
-          activeBanners.forEach((banner) => {
-            const card = document.createElement('article');
-            card.className = 'banner';
-            const art = document.createElement('div');
-            art.className = 'banner-art';
-            const imgUrl = banner.imageUri || banner.imageUrl || banner.image || banner.photoUrl;
-            if (imgUrl) {
-              const image = document.createElement('img');
-              image.src = imgUrl;
-              image.alt = banner.title || 'Catalogue banner';
-              image.loading = 'lazy';
-              image.onerror = () => { image.remove(); art.textContent = '✦'; };
-              art.append(image);
-            } else {
-              art.textContent = '✦';
-            }
-            const copy = document.createElement('div');
-            copy.className = 'banner-copy';
-            const title = banner.title || banner.name || 'Special Offer';
-            const subtitle = banner.subtitle || banner.description || '';
-            const offer = banner.offerText || banner.offer || '';
-            copy.innerHTML = `<strong>${escapeText(title)}</strong><span>${escapeText(subtitle)}</span><b>${escapeText(offer)}</b>`;
-            card.append(art, copy);
-            node.append(card);
+          var banners = catalog.banners || catalog.promoBanners || catalog.backdrops || [];
+          if (!Array.isArray(banners)) banners = [];
+          var active = banners.filter(function(b){ return b.active !== false; });
+          var slides = active.length ? active.map(function(b){ return { image: b.imageUri || b.imageUrl || b.image || b.photoUrl || '' }; }) : [{ image: '' }];
+          track.innerHTML=''; dots.innerHTML='';
+          var cur=0, timer=null;
+          function goTo(i){
+            var t=track.children.length; if(!t) return;
+            cur=(i+t)%t; track.style.transform='translateX(-'+(cur*100)+'%)';
+            var ds=dots.children; for(var d=0;d<ds.length;d++) ds[d].classList.toggle('active', d===cur);
+          }
+          function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+          function start(){ stop(); if(track.children.length>1) timer=setInterval(function(){ goTo(cur+1); },3500); }
+          slides.forEach(function(s,i){
+            var sl=document.createElement('div'); sl.className='hero-slide';
+            if(s.image){ var im=document.createElement('img'); im.src=s.image; im.alt='Banner'; im.loading='lazy'; im.onerror=function(){ showDefault(sl); }; sl.appendChild(im); } else { showDefault(sl); }
+            track.appendChild(sl);
+            var dot=document.createElement('button'); dot.className='hero-dot'+(i===0?' active':''); dot.type='button'; dot.onclick=function(){ goTo(i); start(); }; dots.appendChild(dot);
           });
+          dots.hidden=slides.length<=1;
+          hero.addEventListener('touchstart', stop, {passive:true});
+          hero.addEventListener('touchend', start, {passive:true});
+          start();
+          var old=document.getElementById('banners'); if(old) old.hidden=true;
         }
+
 
         function renderCategories() {
           const node = $('categories');
@@ -814,16 +826,22 @@
           updateEstimate(Math.round(getRate(option) * (1 - (Number(catalog.oldGoldDeductionPercent) || 2) / 100)));
         });
         $('share-button').onclick = async () => {
-          const url = window.location.href;
-          const text = `${catalog.shopName || DEFAULT_SHOP} catalogue\n${url}`;
+          // WORKING share link - customer can forward on WhatsApp and it will open
+          const catalogueUrl = window.location.href;
+          const shop = catalog.shopName || 'Anmol Jewelers';
+          const shareText = `${shop} Jewellery Catalogue\n\nLatest collection dekhiye:\n${catalogueUrl}\n\n📍 #172 Nelagadaran halli Nagasandra post Bangalore 560073\n📞 9480405764\n📸 https://www.instagram.com/anmol_jeweler?cplk=ZThxazRuYWMybWYz`;
+          const waShareUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+          
           if (navigator.share) {
-            try { await navigator.share({ title: `${catalog.shopName || DEFAULT_SHOP} Catalogue`, text, url }); return; }
-            catch (err) { if (err && err.name === 'AbortError') return; }
+            try { 
+              await navigator.share({ title: `${shop} Catalogue`, text: shareText, url: catalogueUrl }); 
+              return; 
+            } catch (err) { 
+              if (err && err.name === 'AbortError') return;
+            }
           }
-          try {
-            if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(url); alert('Catalogue link copy ho gaya!'); }
-            else { window.prompt('Link copy kar lijiye:', url); }
-          } catch (err) { window.prompt('Link copy kar lijiye:', url); }
+          // Working WhatsApp forwardable link
+          window.open(waShareUrl, '_blank', 'noopener,noreferrer');
         };
         $('footer-wa').onclick = () => openWhatsApp(`Hello ${catalog.shopName || DEFAULT_SHOP}, I saw your jewellery catalogue.`);
         $('close-modal').onclick = () => $('modal').classList.remove('open');

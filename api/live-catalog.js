@@ -1,5 +1,5 @@
 // ─── Live Catalog API (Vercel serverless function) ─────────────────────
-// File: api/live-catalog.js
+// File: api/live-catalog.js - FINAL FIXED - Immediate Rate + Photo + Delete
 import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
@@ -13,22 +13,71 @@ const JSON_PUBLIC_ID = 'anmol-catalog/live-catalog.json';
 const PHOTO_FOLDER = 'anmol-catalog/photos';
 
 export default async function handler(req, res) {
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-publish-token');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // GET - Browser se seedha taaza JSON
+  // ── GET: Direct fetch from Cloudinary - NO REDIRECT - INSTANT UPDATE ──
   if (req.method === 'GET') {
     const cloud = process.env.CLOUDINARY_CLOUD_NAME;
-    if (!cloud) return res.status(500).json({ error: 'Not configured' });
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
-    return res.redirect(
-      307,
-      `https://res.cloudinary.com/${cloud}/raw/upload/${JSON_PUBLIC_ID}?t=${Date.now()}`
-    );
+    if (!cloud) return res.status(500).json({ error: 'Cloudinary not configured' });
+    
+    try {
+      const cloudinaryUrl = `https://res.cloudinary.com/${cloud}/raw/upload/v1/${JSON_PUBLIC_ID}?t=${Date.now()}`;
+      
+      const response = await fetch(cloudinaryUrl, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache, no-store' }
+      });
+      
+      if (!response.ok) {
+        return res.status(200).json({ 
+          shopName: "Anmol Jewelers",
+          phone: "",
+          address: null,
+          city: null,
+          metalRates: { goldRate: 0, goldRate999: 0, gold20k: 0, gold18k: 0, silverRate999: 0 },
+          categories: [],
+          items: [],
+          banners: [],
+          updatedAt: new Date().toISOString()
+        });
+      }
+      
+      const data = await response.json();
+      
+      // No-cache headers for immediate updates
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+      res.setHeader('CDN-Cache-Control', 'no-store');
+      res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
+      
+      return res.status(200).json(data);
+    } catch (e) {
+      console.error('[live-catalog GET] error', e);
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(500).json({ error: 'Failed to fetch', details: e.message });
+    }
+  }
+
+  // DELETE: Allow delete of photos if needed
+  if (req.method === 'DELETE') {
+    const token = req.headers['x-publish-token'];
+    if (!PUBLISH_TOKEN || token !== PUBLISH_TOKEN) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    try {
+      const { publicId } = req.body || {};
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId, { resource_type: 'image', invalidate: true });
+      }
+      return res.status(200).json({ success: true });
+    } catch (e) {
+      return res.status(500).json({ error: e.message });
+    }
   }
 
   if (req.method !== 'POST') {
@@ -42,7 +91,7 @@ export default async function handler(req, res) {
 
   const body = req.body || {};
   try {
-    // Photo upload
+    // Photo upload - with overwrite and invalidate for immediate update
     if (body.action === 'uploadPhoto') {
       const { key, base64 } = body;
       if (!key || !base64) return res.status(400).json({ error: 'key/base64 missing' });
@@ -58,12 +107,18 @@ export default async function handler(req, res) {
       return res.status(200).json({ url: result.secure_url });
     }
 
-    // Live JSON publish
+    // Live JSON publish - immediate
     if (body.action === 'publish') {
       const json = JSON.stringify(body.data ?? {});
       const result = await cloudinary.uploader.upload(
         `data:application/json;base64,${Buffer.from(json, 'utf8').toString('base64')}`,
-        { public_id: JSON_PUBLIC_ID, resource_type: 'raw', overwrite: true, invalidate: true }
+        { 
+          public_id: JSON_PUBLIC_ID, 
+          resource_type: 'raw', 
+          overwrite: true, 
+          invalidate: true,
+          type: 'upload'
+        }
       );
       return res.status(200).json({ jsonUrl: result.secure_url, updatedAt: body.data?.updatedAt ?? null });
     }

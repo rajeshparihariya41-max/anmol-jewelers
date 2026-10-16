@@ -76,7 +76,7 @@
       }
       .hero-track { display: flex; height: 100%; transition: transform 0.5s ease; }
       .hero-slide { min-width: 100%; height: 100%; position: relative; flex-shrink: 0; }
-      .hero-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .hero-slide img { width: 100%; height: 100%; object-fit: contain; display: block; background: var(--mint); } /* FIXED: Banner full visible, not cropped */
       .hero-slide-default { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 100%; padding: 22px 20px; }
       .hero-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; }
       .hero-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.6); border: 0; }
@@ -214,19 +214,19 @@
         background: var(--background);
       }
       .handle { width: 42px; height: 4px; margin: 0 auto 14px; border-radius: 2px; background: #c7d8d3; }
-      .detail-image { height: 250px; border-radius: 20px; background: var(--mint); display: grid; place-items: center; overflow: hidden; }
-      .detail-image img { width: 100%; height: 100%; padding: 18px; object-fit: contain; }
-      .detail-thumbs { display: flex; gap: 8px; padding: 10px 0 2px; overflow-x: auto; }
+      .detail-image { height: 62vh; min-height: 380px; border-radius: 20px; background: var(--mint); display: grid; place-items: center; overflow: hidden; }
+      .detail-image img { width: 100%; height: 100%; padding: 8px; object-fit: contain; } /* FIXED: Photo full visible, not cut */
+      .detail-thumbs { display: flex; gap: 6px; padding: 6px 0 2px; overflow-x: auto; }
       .detail-thumb-button { padding: 0; border: 0; border-radius: 10px; background: transparent; }
       .detail-thumb { width: 58px; height: 58px; padding: 0; border: 2px solid var(--border); border-radius: 10px; background: var(--mint); object-fit: contain; }
       .detail-thumb.active { border-color: var(--primary); }
-      .detail-category { margin-top: 18px; color: var(--primary); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 650; }
-      .detail-title { margin: 5px 0 0; font-size: 24px; }
-      .detail-value { margin: 8px 0 0; font-size: 22px; font-weight: 750; }
-      .detail-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
-      .detail-cell { min-height: 58px; padding: 10px; border-radius: 12px; background: var(--mint); }
-      .detail-cell small { display: block; color: var(--muted); font-size: 10px; }
-      .detail-cell strong { display: block; margin-top: 5px; font-size: 13px; }
+      .detail-category { margin-top: 10px; color: var(--primary); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 650; }
+      .detail-title { margin: 4px 0 0; font-size: 16px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .detail-value { margin: 6px 0 0; font-size: 18px; font-weight: 750; } /* FIXED: Name and amount small */
+      .detail-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 10px; }
+      .detail-cell { min-height: 40px; padding: 6px 8px; border-radius: 8px; background: var(--mint); }
+      .detail-cell small { display: block; color: var(--muted); font-size: 9px; line-height:1.1; }
+      .detail-cell strong { display: block; margin-top: 2px; font-size: 11px; line-height:1.2; } /* FIXED: Weight, Purity, Rate small */
       .detail-notes { margin: 16px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
       .action-label { display: inline-flex; align-items: center; gap: 7px; }
       .close { width: 100%; margin-top: 8px; padding: 13px; border: 0; background: transparent; color: var(--muted); }
@@ -516,8 +516,8 @@
           }
           var banners = catalog.banners || catalog.promoBanners || catalog.backdrops || [];
           if (!Array.isArray(banners)) banners = [];
-          var active = banners.filter(function(b){ return b.active !== false; });
-          var slides = active.length ? active.map(function(b){ return { image: b.imageUri || b.imageUrl || b.image || b.photoUrl || '' }; }) : [{ image: '' }];
+          var active = banners.filter(function(b){ return b.active !== false && (b.imageUri || b.imageUrl || b.image || b.photoUrl); });
+          var slides = active.length ? active.map(function(b){ return { image: b.imageUri || b.imageUrl || b.image || b.photoUrl || '' }; }) : [{ image: '' }]; /* FIXED: Banner filter keeps only those with image */
           track.innerHTML=''; dots.innerHTML='';
           var cur=0, timer=null;
           function goTo(i){

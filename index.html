@@ -76,12 +76,12 @@
         min-height: 160px;
         height: auto;
         margin: 10px auto 8px; padding: 0; border-radius: 18px;
-        background: #ffffff; display: block; position: relative; overflow: hidden;
+        background: #f5f1eb; display: block; position: relative; overflow: hidden;
         border: 1px solid #e8ece9; isolation: isolate;
       }
       .hero-track { display: flex; height: 100%; width: 100%; transition: transform 0.55s cubic-bezier(0.25, 0.8, 0.25, 1); will-change: transform; }
-      .hero-slide { flex: 0 0 100%; width: 100%; height: 100%; position: relative; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; aspect-ratio: 2 / 1; }
-      .hero-slide img { width: 100%; height: 100%; object-fit: cover; /* banner me cover ok hai */ object-position: center center; display: block; background: #f5f1eb; }
+      .hero-slide { flex: 0 0 100%; width: 100%; height: 100%; position: relative; overflow: hidden; background: #f5f1eb; display: flex; align-items: center; justify-content: center; aspect-ratio: 2 / 1; }
+      .hero-slide img { width: 100%; height: 100%; object-fit: cover; object-position: center center; display: block; background: #f5f1eb; }
       /* If admin uploads portrait, still fit without stretch */
       .hero-slide img.contain { object-fit: contain; }
       .hero-slide-default { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 100%; padding: 22px 20px; }
@@ -123,39 +123,39 @@
       .grid { 
         display: grid; 
         grid-template-columns: repeat(2, minmax(0, 1fr)); 
-        gap: 6px; 
-        padding: 0 6px; /* FIXED: side border touch - no big white gap */
-        grid-auto-rows: 1fr; 
-        align-items: stretch; 
+        gap: 8px; 
+        padding: 0 8px;
+        grid-auto-rows: auto; 
+        align-items: start; 
       }
       .card {
         position: relative; 
-        border: none; /* FIXED: white border hataya */
-        border-radius: 10px; 
+        border: none;
+        border-radius: 16px;
         overflow: hidden;
         background: #ffffff; 
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
         display: flex; flex-direction: column; 
-        height: 100%; min-height: 310px;
+        height: auto;
         width: 100%;
       }
       .image-frame { 
-        height: 200px; min-height: 200px; max-height: 200px; 
-        position: relative; 
-        background: #ffffff; 
-        display: flex; align-items: center; justify-content: center; 
-        padding: 0; /* FIXED: no inner white gap */
-        overflow: hidden; 
         width: 100%;
+        height: auto; 
+        background: #ffffff; 
+        display: block;
+        padding: 0;
+        overflow: hidden; 
+        border-radius: 16px 16px 0 0;
       }
       .photo { 
-        width: 100%; height: 100%; 
-        padding: 8px; 
-        object-fit: contain; /* FIXED: homepage card me bhi no cut */
-        object-position: center; 
+        width: 100%; 
+        height: auto; 
         display: block; 
         border-radius: 16px 16px 0 0;
         background: #ffffff;
+        object-fit: contain;
+        object-position: top center;
       }
       .no-photo { color: var(--gold); font-family: Georgia, serif; font-size: 48px; }
       .heart {
@@ -266,7 +266,7 @@
         height: auto; 
         min-height: 300px; 
         max-height: none;
-        aspect-ratio: auto; /* FIXED: no fixed square, so bangle bottom won't cut */
+        aspect-ratio: auto;
         background: #ffffff; 
         display: flex; 
         align-items: center; 
@@ -278,9 +278,9 @@
       .detail-image img { 
         width: 100%; 
         height: auto; 
-        max-height: 68vh; /* tall image fully visible */
+        max-height: 70vh;
         padding: 0; 
-        object-fit: contain; /* FIXED: pura bangle dikhega, niche se cut nahi */
+        object-fit: contain; /* detail me pura dikhe */
         object-position: center center;
         background: #ffffff; 
         display: block; 

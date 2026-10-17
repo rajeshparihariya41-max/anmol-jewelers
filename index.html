@@ -533,8 +533,8 @@
           }
           var banners = catalog.banners || catalog.promoBanners || catalog.backdrops || [];
           if (!Array.isArray(banners)) banners = [];
-          var active = banners.filter(function(b){ return b.active !== false && (b.imageUri || b.imageUrl || b.image || b.photoUrl); });
-          var slides = active.length ? active.map(function(b){ return { image: b.imageUri || b.imageUrl || b.image || b.photoUrl || '' }; }) : [{ image: '' }]; /* FIXED: Banner filter keeps only those with image */
+          var active = banners.filter(function(b){ var hasImg = b.imageUri || b.imageUrl || b.image || b.photoUrl || b.url; return b.active !== false && hasImg; }); /* FIXED: Banner shows even photo-only */
+          var slides = active.length ? active.map(function(b){ return { image: b.imageUri || b.imageUrl || b.image || b.photoUrl || b.url || '' }; }) : [{ image: '' }];
           track.innerHTML=''; dots.innerHTML='';
           var cur=0, timer=null;
           function goTo(i){
@@ -747,6 +747,7 @@
         }
 
         function openDetail(item) {
+          if (location.hash !== '#detail') history.pushState({modal:'detail'}, '', '#detail');
           selectedItem = item;
           const photos = itemPhotos(item);
           renderDetailPhoto(photos[0]);

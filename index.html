@@ -70,15 +70,15 @@
       .ui-icon { width: 17px; height: 17px; display: block; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
       .button-icon { width: 15px; height: 15px; flex: 0 0 15px; }
       .hero {
-        height: 200px; min-height: 200px; margin: 8px 12px 6px; padding: 0; border-radius: 16px;
+        height: 200px; min-height: 200px; margin: 8px 12px 6px; padding: 0; border-radius: 12px;
         background: #ffffff; display: block; position: relative; overflow: hidden;
-        border: 1px solid #e8ece9;
-      } /* SLIDING BANNER FIX */
+        border: 1px solid #f0f0f0;
+      }
       .hero-track { display: flex; height: 100%; transition: transform 0.5s ease; }
       .hero-slide { min-width: 100%; height: 100%; position: relative; flex-shrink: 0; }
-      .hero-slide img { width: 100%; height: 100%; object-fit: cover; display: block; background: #ffffff; } /* SLIDING: Cover full banner */
+      .hero-slide img { width: 100%; height: 100%; object-fit: contain; display: block; background: var(--mint); } /* FIXED: Banner full visible, not cropped */
       .hero-slide-default { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 100%; padding: 22px 20px; }
-      .hero-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 2; }
+      .hero-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; }
       .hero-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.6); border: 0; }
       .hero-dot.active { width: 22px; border-radius: 10px; background: #fff; }
       .eyebrow, .section-label {
@@ -139,7 +139,7 @@
       .item-price .discounted { font-size:14px; color:#1e4b43; font-weight:800; }
       .item-price small { color: var(--muted); font-size: 9px; font-weight: 500; } /* Very small as requested */
       .ask {
-        width: 100%; margin-top: 4px; padding: 9px 8px; border: 0; border-radius: 12px;
+        width: 100%; margin-top: 10px; padding: 9px 8px; border: 0; border-radius: 12px;
         background: var(--whatsapp); color: #fff; font-size: 12px; font-weight: 700;
         display: inline-flex; align-items: center; justify-content: center; gap: 7px;
       }
@@ -187,7 +187,7 @@
       .estimate-label { color: var(--muted); font-size: 12px; }
       .estimate-value { font-size: 19px; font-weight: 750; }
       .whatsapp {
-        width: 100%; margin-top: 6px; padding: 10px; border: 0; border-radius: 14px;
+        width: 100%; margin-top: 14px; padding: 14px; border: 0; border-radius: 14px;
         background: var(--primary); color: #fff; font-size: 13px; font-weight: 750;
       }
       .disclaimer { margin: 10px 0 0; color: var(--muted); text-align: center; font-size: 10px; line-height: 1.5; }
@@ -211,25 +211,22 @@
         display: none; justify-content: center; align-items: flex-end;
       }
       .modal.open { display: flex; }
-      .modal-sheet {
-        width: min(680px, 100%); max-height: 91vh; overflow: auto; padding: 18px; border-radius: 26px 26px 0 0;
-        background: var(--background);
-      }
+      .modal-sheet { width: min(440px, 100%); max-height: 92vh; overflow-y: auto; overflow-x: hidden; padding: 0; border-radius: 20px 20px 0 0; background: #ffffff; box-shadow: 0 -10px 40px rgba(0,0,0,0.18); }
       .handle { width: 42px; height: 4px; margin: 0 auto 14px; border-radius: 2px; background: #c7d8d3; }
       .detail-image { height: 42vh; min-height: 260px; max-height: 380px; border-radius: 0px; background: #ffffff; display: block; overflow: hidden; margin: -20px -20px 12px -20px; } /* FIXED: Full bleed to border, no side white gap, smaller */
-      .detail-image img { width: 100%; height: 100%; padding: 0px; object-fit: contain; background:#ffffff; display:block; } /* FIXED: Cover full width, no white gap, multi-color goes to border */
-      .detail-thumbs { display: flex; gap: 5px; padding: 6px 0 2px; overflow-x: auto; }
+      .detail-image img { width: 100%; height: 100%; padding: 0px; object-fit: cover; background:#ffffff; display:block; } /* FIXED: Cover full width, no white gap, multi-color goes to border */
+      .detail-thumbs { display: flex; gap: 6px; padding: 6px 0 2px; overflow-x: auto; }
       .detail-thumb-button { padding: 0; border: 0; border-radius: 10px; background: transparent; }
       .detail-thumb { width: 58px; height: 58px; padding: 0; border: 2px solid var(--border); border-radius: 10px; background: var(--mint); object-fit: contain; }
       .detail-thumb.active { border-color: var(--primary); }
-      .detail-category { margin-top: 4px; color: var(--primary); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 650; }
+      .detail-category { margin-top: 10px; color: var(--primary); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 650; }
       .detail-title { margin: 4px 0 0; font-size: 16px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .detail-value { margin: 6px 0 0; font-size: 18px; font-weight: 750; } /* FIXED: Name and amount small */
-      .detail-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin-top: 4px; }
+      .detail-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 10px; }
       .detail-cell { min-height: 40px; padding: 6px 8px; border-radius: 8px; background: var(--mint); }
       .detail-cell small { display: block; color: var(--muted); font-size: 9px; line-height:1.1; }
       .detail-cell strong { display: block; margin-top: 2px; font-size: 11px; line-height:1.2; } /* FIXED: Weight, Purity, Rate small */
-      .detail-notes { margin: 6px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+      .detail-notes { margin: 16px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
       .action-label { display: inline-flex; align-items: center; gap: 7px; }
       .close { width: 100%; margin-top: 8px; padding: 13px; border: 0; background: transparent; color: var(--muted); }
       .status { margin: 0 18px; color: var(--muted); font-size: 12px; text-align: center; }
@@ -355,21 +352,19 @@
 
     <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Product details">
       <div class="modal-sheet">
+        <div class="handle"></div>
         <div class="detail-image" id="detail-image"></div>
-        <div class="detail-body">
-          <div class="handle" style="margin: 10px auto 6px;"></div>
-          <div class="detail-thumbs" id="detail-thumbs"></div>
-          <div class="detail-category" id="detail-category"></div>
-          <h2 class="detail-title" id="detail-title"></h2>
-          <div class="detail-value" id="detail-value"></div>
-          <div class="detail-grid" id="detail-grid"></div>
-          <p class="detail-notes" id="detail-notes" hidden></p>
-          <button class="ask" type="button" id="detail-wa">
-            <svg class="ui-icon button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.3 1.5 1.3 3 2.8 4s2.7 1.2 3.7.7l.8-1.1-2-1.1-.8.8c-.6-.2-1.5-1-1.8-1.6l.6-.8-1.1-1.9-1.2.4Z"></path></svg>
-            <span>Enquire on WhatsApp</span>
-          </button>
-          <button class="close" type="button" id="close-modal">Close</button>
-        </div>
+        <div class="detail-thumbs" id="detail-thumbs"></div>
+        <div class="detail-category" id="detail-category"></div>
+        <h2 class="detail-title" id="detail-title"></h2>
+        <div class="detail-value" id="detail-value"></div>
+        <div class="detail-grid" id="detail-grid"></div>
+        <p class="detail-notes" id="detail-notes" hidden></p>
+        <button class="ask" type="button" id="detail-wa">
+          <svg class="ui-icon button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.3 1.5 1.3 3 2.8 4s2.7 1.2 3.7.7l.8-1.1-2-1.1-.8.8c-.6-.2-1.5-1-1.8-1.6l.6-.8-1.1-1.9-1.2.4Z"></path></svg>
+          <span>Enquire on WhatsApp</span>
+        </button>
+        <button class="close" type="button" id="close-modal">Close</button>
       </div>
     </div>
 
@@ -535,8 +530,8 @@
           }
           var banners = catalog.banners || catalog.promoBanners || catalog.backdrops || [];
           if (!Array.isArray(banners)) banners = [];
-          var active = banners.filter(function(b){ var hasImg = b.imageUri || b.imageUrl || b.image || b.photoUrl || b.url || b.imageURL; return b.active !== false && hasImg; }); console.log('Banners found:', active.length, active);
-          var slides = active.length ? active.map(function(b){ return { image: b.imageUri || b.imageUrl || b.image || b.photoUrl || b.url || '' }; }) : [{ image: '' }];
+          var active = banners.filter(function(b){ return b.active !== false && (b.imageUri || b.imageUrl || b.image || b.photoUrl); });
+          var slides = active.length ? active.map(function(b){ return { image: b.imageUri || b.imageUrl || b.image || b.photoUrl || '' }; }) : [{ image: '' }]; /* FIXED: Banner filter keeps only those with image */
           track.innerHTML=''; dots.innerHTML='';
           var cur=0, timer=null;
           function goTo(i){
@@ -749,7 +744,6 @@
         }
 
         function openDetail(item) {
-          if (location.hash !== '#detail') history.pushState({modal:'detail'}, '', '#detail');
           selectedItem = item;
           const photos = itemPhotos(item);
           renderDetailPhoto(photos[0]);

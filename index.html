@@ -70,13 +70,13 @@
       .ui-icon { width: 17px; height: 17px; display: block; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
       .button-icon { width: 15px; height: 15px; flex: 0 0 15px; }
       .hero {
-        height: 200px; min-height: 200px; margin: 8px 12px 6px; padding: 0; border-radius: 12px;
+        height: 200px; min-height: 200px; margin: 8px 12px 6px; padding: 0; border-radius: 16px;
         background: #ffffff; display: block; position: relative; overflow: hidden;
-        border: 1px solid #f0f0f0;
-      }
+        border: 1px solid #e8ece9;
+      } /* SLIDING BANNER FIX */
       .hero-track { display: flex; height: 100%; transition: transform 0.5s ease; }
       .hero-slide { min-width: 100%; height: 100%; position: relative; flex-shrink: 0; }
-      .hero-slide img { width: 100%; height: 100%; object-fit: contain; display: block; background: var(--mint); } /* FIXED: Banner full visible, not cropped */
+      .hero-slide img { width: 100%; height: 100%; object-fit: cover; display: block; background: #ffffff; } /* SLIDING: Cover full banner */
       .hero-slide-default { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 100%; padding: 22px 20px; }
       .hero-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 2; }
       .hero-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.6); border: 0; }
@@ -533,7 +533,7 @@
           }
           var banners = catalog.banners || catalog.promoBanners || catalog.backdrops || [];
           if (!Array.isArray(banners)) banners = [];
-          var active = banners.filter(function(b){ var hasImg = b.imageUri || b.imageUrl || b.image || b.photoUrl || b.url; return b.active !== false && hasImg; }); /* FIXED: Banner shows even photo-only */
+          var active = banners.filter(function(b){ var hasImg = b.imageUri || b.imageUrl || b.image || b.photoUrl || b.url || b.imageURL; return b.active !== false && hasImg; }); console.log('Banners found:', active.length, active);
           var slides = active.length ? active.map(function(b){ return { image: b.imageUri || b.imageUrl || b.image || b.photoUrl || b.url || '' }; }) : [{ image: '' }];
           track.innerHTML=''; dots.innerHTML='';
           var cur=0, timer=null;

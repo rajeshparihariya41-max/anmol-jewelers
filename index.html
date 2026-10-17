@@ -69,12 +69,23 @@
       }
       .ui-icon { width: 17px; height: 17px; display: block; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
       .button-icon { width: 15px; height: 15px; flex: 0 0 15px; }
-      .hero { height: 180px; min-height: 180px; max-height: 180px; margin: 8px 12px; border-radius: 14px; background: #ffffff; position: relative; overflow: hidden; border: 0; }
-      .hero-track { display: flex; width: 100%; height: 100%; transition: transform 0.4s ease; }
-      .hero-slide { min-width: 100%; width: 100%; height: 100%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #ffffff; }
-      .hero-slide img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; background: #ffffff; } /* MATCH ADMIN: Center, contain, no side white uneven, same as edit preview */ /* BANNER CENTER FIX: No white side gap, full width, center */ /* FIXED: Banner full visible, not cropped */
+      .hero {
+        width: calc(100% - 24px);
+        aspect-ratio: 2 / 1; /* FIXED: Banner upload size = display size - 2:1 matches 1200x600 */
+        max-height: 260px;
+        min-height: 160px;
+        height: auto;
+        margin: 10px auto 8px; padding: 0; border-radius: 18px;
+        background: #f5f1eb; display: block; position: relative; overflow: hidden;
+        border: 1px solid #e8ece9; isolation: isolate;
+      }
+      .hero-track { display: flex; height: 100%; width: 100%; transition: transform 0.55s cubic-bezier(0.25, 0.8, 0.25, 1); will-change: transform; }
+      .hero-slide { flex: 0 0 100%; width: 100%; height: 100%; position: relative; overflow: hidden; background: #f5f1eb; display: flex; align-items: center; justify-content: center; aspect-ratio: 2 / 1; }
+      .hero-slide img { width: 100%; height: 100%; object-fit: cover; object-position: center center; display: block; background: #f5f1eb; }
+      /* If admin uploads portrait, still fit without stretch */
+      .hero-slide img.contain { object-fit: contain; }
       .hero-slide-default { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 100%; padding: 22px 20px; }
-      .hero-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; }
+      .hero-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 2; }
       .hero-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.6); border: 0; }
       .hero-dot.active { width: 22px; border-radius: 10px; background: #fff; }
       .eyebrow, .section-label {
@@ -87,7 +98,7 @@
         display: grid; place-items: center; text-align: center; color: var(--primary);
         font-size: 11px; font-weight: 650; line-height: 1.35;
       }
-      .banner-row { display: flex; overflow: hidden; }
+      .banner-row { display: flex; gap: 10px; padding: 0 16px 2px; overflow-x: auto; }
       .banner {
         min-width: 292px; min-height: 106px; border: 1px solid var(--border); border-radius: 17px;
         background: var(--card); display: flex; overflow: hidden;
@@ -109,13 +120,14 @@
       .section-heading h2 { margin: 0; font-size: 22px; }
       .section-heading p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
       .section-accent { color: var(--primary); font-size: 13px; font-weight: 650; letter-spacing: 1px; }
-      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 0 12px; }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 0 12px; grid-auto-rows: 1fr; align-items: stretch; }
       .card {
         position: relative; border: 1px solid #f0f0f0; border-radius: 12px; overflow: hidden;
         background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        display: flex; flex-direction: column; height: 100%; min-height: 320px;
       }
-      .image-frame { height: 200px; position: relative; background: #ffffff; display: grid; place-items: center; padding: 8px; }
-      .photo { width: 100%; height: 100%; padding: 0px; object-fit: contain; display: block; border-radius: 8px; background:#ffffff; } /* ETHERA LOGIC: White bg, fully visible, rounded */
+      .image-frame { height: 210px; min-height: 210px; max-height: 210px; position: relative; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 6px; overflow: hidden; }
+      .photo { width: 100%; height: 100%; max-height: 198px; padding: 0px; object-fit: contain; object-position: center center; display: block; border-radius: 8px; background:#ffffff; } /* FIXED: contain + fixed height = no big/small difference */
       .no-photo { color: var(--gold); font-family: Georgia, serif; font-size: 48px; }
       .heart {
         position: absolute; z-index: 1; top: 10px; left: 10px; width: 32px; height: 32px;
@@ -126,15 +138,19 @@
         position: absolute; bottom: 9px; left: 9px; padding: 5px 9px; border-radius: 12px;
         color: #fff; background: var(--primary); font-size: 10px; font-weight: 650;
       }
-      .card-body { padding: 8px 10px; }
+      .card-body { padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 2px; min-height: 92px; }
       .item-category { color: var(--primary); font-size: 8px; text-transform: uppercase; letter-spacing: .6px; font-weight: 650; }
-      .item-name { min-height: 32px; margin: 2px 0 0; font-size: 12px; line-height: 1.25; font-weight: 550; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-      .item-meta { margin: 4px 0 0; color: var(--muted); font-size: 9px; }
-      .item-price { margin: 6px 0 0; font-size: 13px; font-weight: 750; display:flex; gap:6px; align-items:center; }
+      .item-name { min-height: 28px; max-height: 36px; margin: 2px 0 0; font-size: 12px; line-height: 1.25; font-weight: 550; white-space: normal; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word; }
+      .item-meta { margin: 3px 0 0; color: var(--muted); font-size: 9.5px; line-height: 1.3; white-space: normal; overflow: visible; }
+      .item-price { margin: 4px 0 0; font-size: 13px; font-weight: 750; display:flex; gap:6px; align-items:center; flex-wrap: wrap; }
       .item-price .original { font-size:11px; color:#9aa8a4; text-decoration:line-through; font-weight:400; }
       .item-price .discounted { font-size:14px; color:#1e4b43; font-weight:800; }
       .item-price small { color: var(--muted); font-size: 9px; font-weight: 500; } /* Very small as requested */
-      
+      .ask {
+        width: 100%; margin-top: 4px; padding: 9px 8px; border: 0; border-radius: 12px;
+        background: var(--whatsapp); color: #fff; font-size: 12px; font-weight: 700;
+        display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      }
       .empty {
         margin: 18px; padding: 26px; border-radius: 18px; background: var(--mint); text-align: center;
       }
@@ -178,7 +194,10 @@
       .estimate { background: var(--mint); }
       .estimate-label { color: var(--muted); font-size: 12px; }
       .estimate-value { font-size: 19px; font-weight: 750; }
-      
+      .whatsapp {
+        width: 100%; margin-top: 6px; padding: 10px; border: 0; border-radius: 14px;
+        background: var(--primary); color: #fff; font-size: 13px; font-weight: 750;
+      }
       .disclaimer { margin: 10px 0 0; color: var(--muted); text-align: center; font-size: 10px; line-height: 1.5; }
       .quality { margin-top: 20px; padding: 14px 20px; border-top: 1px solid var(--border); text-align: center; }
       .quality .seal {
@@ -206,42 +225,32 @@
       }
       .handle { width: 42px; height: 4px; margin: 0 auto 14px; border-radius: 2px; background: #c7d8d3; }
       .detail-image { height: 42vh; min-height: 260px; max-height: 380px; border-radius: 0px; background: #ffffff; display: block; overflow: hidden; margin: -20px -20px 12px -20px; } /* FIXED: Full bleed to border, no side white gap, smaller */
-      .detail-image img { width: 100%; height: 100%; padding: 0px; object-fit: cover; background:#ffffff; display:block; } /* FIXED: Cover full width, no white gap, multi-color goes to border */
-      .detail-thumbs { display: flex; gap: 6px; padding: 6px 0 2px; overflow-x: auto; }
+      .detail-image img { width: 100%; height: 100%; padding: 0px; object-fit: contain; background:#ffffff; display:block; } /* FIXED: Cover full width, no white gap, multi-color goes to border */
+      .detail-thumbs { display: flex; gap: 4px; padding: 6px 0 2px; overflow-x: auto; }
       .detail-thumb-button { padding: 0; border: 0; border-radius: 10px; background: transparent; }
       .detail-thumb { width: 58px; height: 58px; padding: 0; border: 2px solid var(--border); border-radius: 10px; background: var(--mint); object-fit: contain; }
       .detail-thumb.active { border-color: var(--primary); }
-      .detail-category { font-size: 8px; color: #0f5a4a; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; margin: 0; line-height: 1.1; }
+      .detail-category { margin-top: 4px; color: var(--primary); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 650; }
       .detail-title { margin: 4px 0 0; font-size: 16px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-       /* FIXED: Name and amount small */
-      
+      .detail-value { margin: 6px 0 0; font-size: 18px; font-weight: 750; } /* FIXED: Name and amount small */
+      .detail-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; margin-top: 4px; }
       .detail-cell { min-height: 40px; padding: 6px 8px; border-radius: 8px; background: var(--mint); }
       .detail-cell small { display: block; color: var(--muted); font-size: 9px; line-height:1.1; }
       .detail-cell strong { display: block; margin-top: 2px; font-size: 11px; line-height:1.2; } /* FIXED: Weight, Purity, Rate small */
-      .detail-notes { margin: 16px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+      .detail-notes { margin: 6px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
       .action-label { display: inline-flex; align-items: center; gap: 7px; }
       .close { width: 100%; margin-top: 8px; padding: 13px; border: 0; background: transparent; color: var(--muted); }
       .status { margin: 0 18px; color: var(--muted); font-size: 12px; text-align: center; }
       @media (min-width: 720px) {
         .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-        .hero { height: 180px; min-height: 180px; max-height: 180px; margin: 8px 12px; border-radius: 14px; background: #ffffff; position: relative; overflow: hidden; border: 0; }
+        .hero { margin-left: 24px; margin-right: 24px; }
       }
       @media (max-width: 480px) {
         .topbar { padding-left: 16px; padding-right: 16px; }
         .shop-name { font-size: 16px; }
         .hero-badge { width: 76px; height: 76px; flex-basis: 76px; font-size: 10px; }
       }
-    .product-value { font-size: 11px; font-weight: 700; color: #0f2e26; line-height: 1.1; }
-.detail-value { font-size: 13px; font-weight: 700; }
-.detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 4px; }
-.detail-cell { background: #f3f7f5; border-radius: 6px; padding: 5px 6px; }
-.detail-cell small { font-size: 7px; color: #6b7d77; text-transform: uppercase; }
-.detail-cell strong { font-size: 9px; color: #1a1a1a; }
-.whatsapp, .ask { width: 100%; margin-top: 6px; padding: 7px 8px; border: 0; border-radius: 8px; background: #0f5a4a; color: #fff; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 4px; }
-.whatsapp .ui-icon, .ask .ui-icon { width: 12px; height: 12px; } /* Very small whatsapp icon */
-.product-wa { padding: 7px; font-size: 11px; }
-.product-wa .ui-icon { width: 12px; height: 12px; }
-</style>
+    </style>
   </head>
   <body>
     <main class="page">
@@ -415,10 +424,13 @@
           return digits.length === 10 ? `91${digits}` : digits;
         };
         const openWhatsApp = (message) => {
-          const number = '919480405764'; // FIXED: 9480405764
+          const number = '919480405764'; // Admin WA: 9480405764
+          // message may already contain %0A, decode then re-encode once
+          let clean = message;
+          try { if (/%[0-9A-F]{2}/i.test(message)) clean = decodeURIComponent(message); } catch {}
           const url = number
-            ? `https://wa.me/${number}?text=${encodeURIComponent(message)}`
-            : `https://wa.me/?text=${encodeURIComponent(message)}`;
+            ? `https://wa.me/${number}?text=${encodeURIComponent(clean)}`
+            : `https://wa.me/?text=${encodeURIComponent(clean)}`;
           window.open(url, '_blank', 'noopener,noreferrer');
         };
         const itemPhotos = (item) => {
@@ -529,29 +541,38 @@
           var dots = document.getElementById('hero-dots');
           function showDefault(slide){
             slide.innerHTML = '<div class="hero-slide-default"><div><div class="eyebrow">ANMOL JEWELERS</div><h1>Jewellery Catalogue</h1><p class="hero-sub">Browse our latest collection before you visit us.</p></div><div class="hero-badge">\u2726<br/>Anmol</div></div>';
+            slide.style.background = '#ffffff';
           }
           var banners = catalog.banners || catalog.promoBanners || catalog.backdrops || [];
           if (!Array.isArray(banners)) banners = [];
-          var active = banners.filter(function(b){ return b.active !== false && (b.imageUri || b.imageUrl || b.image || b.photoUrl); });
-          var slides = active.length ? active.map(function(b){ return { image: b.imageUri || b.imageUrl || b.image || b.photoUrl || '' }; }) : [{ image: '' }]; /* FIXED: Banner filter keeps only those with image */
+          var active = banners.filter(function(b){ var hasImg = b.imageUri || b.imageUrl || b.image || b.photoUrl || b.url || b.imageURL || b.photoUri; return b.active !== false && hasImg; });
+          var slides = active.length ? active.map(function(b){ return { image: b.imageUri || b.imageUrl || b.image || b.photoUrl || b.url || b.imageURL || b.photoUri || '' }; }) : [{ image: '' }];
           track.innerHTML=''; dots.innerHTML='';
           var cur=0, timer=null;
+          function getW(){ return hero.clientWidth || hero.getBoundingClientRect().width || window.innerWidth; }
           function goTo(i){
             var t=track.children.length; if(!t) return;
-            cur=(i+t)%t; track.style.transform='translateX(-'+(cur*100)+'%)';
+            cur=(i+t)%t;
+            var w = getW();
+            track.style.transform='translateX(-'+(cur*w)+'px)';
             var ds=dots.children; for(var d=0;d<ds.length;d++) ds[d].classList.toggle('active', d===cur);
           }
           function stop(){ if(timer){ clearInterval(timer); timer=null; } }
           function start(){ stop(); if(track.children.length>1) timer=setInterval(function(){ goTo(cur+1); },3500); }
           slides.forEach(function(s,i){
             var sl=document.createElement('div'); sl.className='hero-slide';
-            if(s.image){ var im=document.createElement('img'); im.src=s.image; im.alt='Banner'; im.loading='lazy'; im.onerror=function(){ showDefault(sl); }; sl.appendChild(im); } else { showDefault(sl); }
+            if(s.image){ var im=document.createElement('img'); im.src=s.image; im.alt='Banner'; im.loading='eager'; im.decoding='async'; im.onerror=function(){ showDefault(sl); }; sl.appendChild(im); } else { showDefault(sl); }
             track.appendChild(sl);
-            var dot=document.createElement('button'); dot.className='hero-dot'+(i===0?' active':''); dot.type='button'; dot.onclick=function(){ goTo(i); start(); }; dots.appendChild(dot);
+            var dot=document.createElement('button'); dot.className='hero-dot'+(i===0?' active':''); dot.type='button'; dot.setAttribute('aria-label','Go to banner '+(i+1)); dot.onclick=function(){ goTo(i); start(); }; dots.appendChild(dot);
           });
           dots.hidden=slides.length<=1;
+          // FIX: Handle resize - keep banner locked in place, no jumping
+          var resizeTimer=null;
+          window.addEventListener('resize', function(){ clearTimeout(resizeTimer); resizeTimer=setTimeout(function(){ goTo(cur); }, 100); });
           hero.addEventListener('touchstart', stop, {passive:true});
           hero.addEventListener('touchend', start, {passive:true});
+          // Initial position
+          requestAnimationFrame(function(){ goTo(0); });
           start();
           var old=document.getElementById('banners'); if(old) old.hidden=true;
         }
@@ -659,18 +680,43 @@
             ask.className = 'ask';
             ask.type = 'button';
             ask.innerHTML = `<svg class="ui-icon button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.3 1.5 1.3 3 2.8 4s2.7 1.2 3.7.7l.8-1.1-2-1.1-.8.8c-.6-.2-1.5-1-1.8-1.6l.6-.8-1.1-1.9-1.2.4Z"></path></svg><span>WhatsApp enquiry</span>`;
+            // NEW: Detailed WhatsApp with unique ID, weight, purity, price
+            function buildWhatsAppMsg(it) {
+              const shortId = (it.id || '').toString().slice(-6).toUpperCase() || Math.random().toString(36).slice(2,8).toUpperCase();
+              const netW = it.netWeight ?? it.weight ?? 0;
+              const grossW = it.grossWeight ?? '';
+              const purity = it.purity || '';
+              const rate = getItemRate(it);
+              const valObj = calculateItemValue(it);
+              const price = typeof valObj === 'object' ? valObj.discounted : valObj;
+              const priceTxt = money(price);
+              const cat = categoryName(it);
+              const photo = (itemPhotos(it)[0] || '');
+              const link = window.location.href.split('#')[0];
+              // Small compact message - easy to identify
+              return `*Enquiry: ${it.name || 'Jewellery'}*%0A` +
+                     `Code: ${shortId} | ID: ${(it.id||'').toString().slice(0,8)}%0A` +
+                     `Cat: ${cat}%0A` +
+                     `Wt: ${netW}g${grossW ? ' (Gross '+grossW+'g)' : ''} | Purity: ${purity}%0A` +
+                     `Rate: ${money(rate)}/g | Price: ${priceTxt}%0A` +
+                     (photo ? `Photo: ${photo}%0A` : '') +
+                     `Link: ${link}%0A%0A` +
+                     `Customer se baat karni hai is item ke baare me.`;
+            }
             ask.onclick = (event) => {
               event.stopPropagation();
-              const price = calculateItemValue(item);
-              const priceVal = typeof price === 'object' ? price.discounted : price;
-              const photos = itemPhotos(item);
-              const mainPhoto = photos[0] || '';
-              const netW = item.netWeight ?? item.weight ?? 'N/A';
-              const purity = item.purity || '22K';
-              const wastage = item.wastagePercent || '0';
-              const cat = categoryName(item);
-              const msg = `*Anmol Jewelers - Enquiry*\n\n*Design:* ${item.name || cat}\n*Category:* ${cat}\n*Purity:* ${purity}\n*Net Weight:* ${netW}g\n*Wastage:* ${wastage}%\n*Price:* ${money(priceVal)}\n\n*Photo:* ${mainPhoto}\n\nPlease share more details.`;
-              openWhatsApp(msg);
+              const msg = decodeURIComponent(buildWhatsAppMsg(item).replace(/%0A/g, '\n')).replace(/\n/g, '\n'); // we will encode in openWhatsApp
+              // Build raw then encode
+              const raw = `Namaste ${catalog.shopName||DEFAULT_SHOP}%0AEnquiry: ${item.name||'Jewellery'}%0ACode: ${(item.id||'').toString().slice(-6).toUpperCase()}%0AItem ID: ${(item.id||'').toString().slice(0,8)}%0AWt: ${item.netWeight ?? item.weight ?? 0}g | Purity: ${item.purity||''}%0APrice: ${money(calculateItemValueSimple(item))}%0ALink: ${window.location.href}`;
+              // Use helper that builds clean hindi small message
+              const shortId = (item.id||'').toString().slice(-6).toUpperCase();
+              const net = item.netWeight ?? item.weight ?? 0;
+              const pur = item.purity||'';
+              const rate = getItemRate(item);
+              const prc = calculateItemValue(item);
+              const finalPrice = typeof prc === 'object' ? prc.discounted : prc;
+              const finalMsg = `Hi ${catalog.shopName||'Anmol'}%0A*${(item.name||'Jewellery').replace(/\*/g,'')}*%0ACode: ${shortId}%0AItem: ${(item.id||'').toString().slice(0,8)}%0AWt: ${net}g | Pur: ${pur}%0ARate: ${money(rate)}/g | Price: ${money(finalPrice)}%0ALink: ${window.location.href.split('#')[0]}`;
+              openWhatsApp(decodeURIComponent(finalMsg));
             };
             body.append(ask);
             card.append(body);
@@ -755,6 +801,7 @@
         }
 
         function openDetail(item) {
+          if (location.hash !== '#detail') history.pushState({modal:'detail'}, '', '#detail');
           selectedItem = item;
           const photos = itemPhotos(item);
           renderDetailPhoto(photos[0]);
@@ -812,35 +859,16 @@
           notes.textContent = item.notes || '';
           notes.hidden = !item.notes;
           $('modal').classList.add('open');
+          // Detail modal - same detailed format with weight purity price
           $('detail-wa').onclick = () => {
-          const item = selectedItem;
-          if (!item) return;
-          const price = calculateItemValue(item);
-          const priceVal = typeof price === 'object' ? price.discounted : price;
-          const photos = itemPhotos(item);
-          const mainPhoto = photos[0] || '';
-          const netW = item.netWeight ?? item.weight ?? 'N/A';
-          const grossW = item.grossWeight ?? '';
-          const purity = item.purity || '22K';
-          const wastage = item.wastagePercent || '0';
-          const making = item.makingChargeAmount || item.makingChargePercent || '0';
-          const cat = categoryName(item);
-          const msg = `*Anmol Jewelers - Enquiry*
-
-*Design:* ${item.name || cat}
-*Category:* ${cat}
-*Purity:* ${purity}
-*Net Weight:* ${netW}g
-${grossW ? '*Gross Weight:* '+grossW+'g
-' : ''}*Wastage:* ${wastage}%
-*Making:* ₹${making}
-*Approx Price:* ${money(priceVal)}
-
-*Photo:* ${mainPhoto}
-
-Please share more details.`;
-          openWhatsApp(msg);
-        };
+            const _rate = getItemRate(item);
+            const _val = calculateItemValue(item);
+            const _price = typeof _val === 'object' ? _val.discounted : _val;
+            const _code = (item.id||'').toString().slice(-6).toUpperCase();
+            const _photo = (itemPhotos(item)[0] || '');
+            const msg = `Hi ${catalog.shopName||'Anmol'}%0A*${item.name||'Jewellery'}*%0ACode: ${_code}%0AID: ${(item.id||'').toString().slice(0,8)}%0AWt: ${item.netWeight ?? item.weight ?? 0}g${item.grossWeight ? ' (Gross '+item.grossWeight+'g)' : ''} | Pur: ${item.purity||''}%0ARate: ${money(_rate)}/g | Price: ${money(_price)}%0A${_photo ? 'Photo: '+_photo+'%0A' : ''}Link: ${window.location.href.split('#')[0]}`;
+            openWhatsApp(decodeURIComponent(msg));
+          };
         }
 
         async function loadCatalog() {

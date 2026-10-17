@@ -251,33 +251,69 @@
       }
       .modal.open { display: flex; }
       .modal-sheet {
-        width: min(680px, 100%); max-height: 92vh; overflow: auto; padding: 18px; border-radius: 26px 26px 0 0;
-        background: var(--background);
+        width: min(680px, 100%); max-height: 92vh; overflow: auto; padding: 0; border-radius: 26px 26px 0 0;
+        background: #ffffff;
         overflow-x: hidden;
+        overscroll-behavior: contain; /* FIXED: upar-niche 2cm slide band */
       }
+      .handle { display: none; } /* FIXED: upar ka white gap hataya */
+      .modal-sheet .detail-thumbs, .modal-sheet .detail-category, .modal-sheet .detail-title, .modal-sheet .detail-value, .modal-sheet .detail-grid, .modal-sheet .detail-notes, .modal-sheet .ask, .modal-sheet .close {
+        margin-left: 18px; margin-right: 18px;
+      }
+      .modal-sheet .detail-thumbs { margin-left: 18px; margin-right: 18px; margin-top: 12px; }
+      .modal-sheet .close { margin-bottom: 18px; }
       .handle { width: 42px; height: 4px; margin: 0 auto 14px; border-radius: 2px; background: #c7d8d3; }
       .detail-image { 
-        width: calc(100% + 40px);
-        aspect-ratio: 1 / 1; /* FIXED: 1:1 square like product card - admin size match */
-        height: auto; min-height: 320px; max-height: 60vh;
-        border-radius: 26px 26px 0 0; /* FIXED: top round like modal */
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        height: auto; min-height: 340px; max-height: 62vh;
+        border-radius: 26px 26px 0 0; /* FIXED: top se hi round */
         background: #f5f1eb; 
         display: block; overflow: hidden; 
-        margin: -18px -18px 12px -18px; 
+        margin: 0; /* FIXED: upar ka gap 0 */
       }
       .detail-image img { 
         width: 100%; height: 100%; 
         padding: 0; 
-        object-fit: cover; /* FIXED: pura width touch, chauda, lamba nahi, white gap khatam */
+        object-fit: cover;
         object-position: center center;
         background:#f5f1eb; 
         display:block; 
         border-radius: 26px 26px 0 0;
       }
-      .detail-thumbs { display: flex; gap: 8px; padding: 10px 2px 6px; overflow-x: auto; }
-      .detail-thumb-button { padding: 0; border: 0; border-radius: 10px; background: transparent; }
-      .detail-thumb { width: 58px; height: 58px; padding: 0; border: 2px solid var(--border); border-radius: 10px; background: var(--mint); object-fit: contain; }
-      .detail-thumb.active { border-color: var(--primary); }
+      .detail-thumbs { 
+        display: flex; gap: 12px; 
+        padding: 14px 18px 8px; 
+        overflow-x: auto; 
+        align-items: center;
+        justify-content: flex-start;
+      }
+      .detail-thumb-button { 
+        width: 72px; height: 72px;
+        padding: 0; 
+        border: 2px solid #dce8e2; 
+        border-radius: 12px; 
+        background: #f5f1eb; 
+        flex: 0 0 auto;
+        line-height: 0;
+        overflow: hidden;
+      }
+      .detail-thumb-button.active, .detail-thumb-button:has(.active) { 
+        border-color: #2B5B52; 
+        border-width: 2.5px;
+        box-shadow: 0 2px 8px rgba(43,91,82,0.15);
+      }
+      .detail-thumb { 
+        width: 100%; height: 100%; 
+        padding: 0; 
+        border: none; 
+        border-radius: 0; 
+        background: transparent; 
+        object-fit: cover; 
+        object-position: center;
+        display: block;
+      }
+      .detail-thumb.active { border: none; }
       .detail-category { margin-top: 4px; color: var(--primary); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 650; }
       .detail-title { margin: 4px 0 0; font-size: 16px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .detail-value { margin: 6px 0 0; font-size: 18px; font-weight: 750; } /* FIXED: Name and amount small */

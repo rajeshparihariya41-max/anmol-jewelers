@@ -123,40 +123,44 @@
       .grid { 
         display: grid; 
         grid-template-columns: repeat(2, minmax(0, 1fr)); 
-        gap: 8px; 
+        gap: 10px; 
         padding: 0 8px;
-        grid-auto-rows: auto; 
-        align-items: start; 
+        grid-auto-rows: 1fr; 
+        align-items: stretch; 
       }
       .card {
         position: relative; 
         border: none;
-        border-radius: 16px;
+        border-radius: 20px; /* FIXED: pura card round */
         overflow: hidden;
         background: #ffffff; 
-        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         display: flex; flex-direction: column; 
-        height: auto;
+        height: 100%;
         width: 100%;
+        padding: 6px; /* FIXED: andar thoda gap taki photo ke 4 corner round dikhe */
       }
       .image-frame { 
+        aspect-ratio: 1 / 1;
         width: 100%;
-        height: auto; 
+        height: auto;
         background: #ffffff; 
         display: block;
         padding: 0;
         overflow: hidden; 
-        border-radius: 16px 16px 0 0;
+        border-radius: 16px; /* FIXED: charo corner round - upar bhi neeche bhi */
       }
       .photo { 
         width: 100%; 
-        height: auto; 
-        display: block; 
-        border-radius: 16px 16px 0 0;
-        background: #ffffff;
-        object-fit: contain;
+        height: 100%; 
+        padding: 0; 
+        object-fit: cover;
         object-position: top center;
+        display: block; 
+        border-radius: 16px; /* FIXED: photo bhi 4 corner round */
+        background: #ffffff;
       }
+      .card-body { padding: 8px 6px 2px; }
       .no-photo { color: var(--gold); font-family: Georgia, serif; font-size: 48px; }
       .heart {
         position: absolute; z-index: 1; top: 10px; left: 10px; width: 32px; height: 32px;
@@ -243,21 +247,85 @@
       .footer-actions button { min-width: 122px; padding: 9px 15px; border-radius: 19px; font-size: 12px; font-weight: 650; }
       .footer-wa { border: 1px solid var(--whatsapp); background: var(--whatsapp); color: white; }
       .footer-ig { border: 1px solid var(--border); background: var(--card); color: var(--primary); }
-      .modal {
-        position: fixed; inset: 0; z-index: 5; padding: 5vh 16px 0; background: rgba(43, 73, 67, .18);
-        display: none; justify-content: center; align-items: flex-end;
+      .modal { 
+        position: fixed; inset: 0; 
+        background: rgba(0,0,0,0.55); 
+        display: flex; 
+        justify-content: center; 
+        align-items: flex-end; 
+        z-index: 50; 
+        opacity: 0; pointer-events: none; 
+        transition: opacity 0.25s; 
       }
-      .modal.open { display: flex; }
+      .modal.open { opacity: 1; pointer-events: auto; }
       .modal-sheet {
-        width: min(680px, 100%); max-height: 92vh; overflow: auto; padding: 0; border-radius: 26px 26px 0 0;
+        width: min(680px, 100%); 
+        max-height: 86vh; /* FIXED: pura page me nahi, 86vh me sab fit */
+        height: auto;
+        overflow: hidden; 
+        display: flex;
+        flex-direction: column;
+        padding: 0; 
+        border-radius: 26px 26px 0 0;
         background: #ffffff;
-        overflow-x: hidden;
-        overscroll-behavior: contain; /* FIXED: upar-niche 2cm slide band */
+        overscroll-behavior: contain;
       }
-      .handle { display: none; } /* FIXED: upar ka white gap hataya */
-      .modal-sheet .detail-thumbs, .modal-sheet .detail-category, .modal-sheet .detail-title, .modal-sheet .detail-value, .modal-sheet .detail-grid, .modal-sheet .detail-notes, .modal-sheet .ask, .modal-sheet .close {
-        margin-left: 18px; margin-right: 18px;
+      .handle { display: none; }
+      .detail-image { 
+        width: 100%;
+        height: auto; 
+        max-height: 38vh; /* FIXED: chota kiya taki ek page me sab aaye */
+        min-height: 220px;
+        background: #ffffff; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        overflow: hidden; 
+        margin: 0; 
+        border-radius: 26px 26px 0 0;
+        flex-shrink: 0;
       }
+      .detail-image img { 
+        width: 100%; 
+        height: auto; 
+        max-height: 38vh;
+        padding: 0; 
+        object-fit: contain;
+        object-position: center;
+        background: #ffffff; 
+        display: block; 
+      }
+      .detail-thumbs { 
+        display: flex; gap: 8px; 
+        padding: 10px 16px 6px; 
+        overflow-x: auto; 
+        align-items: center;
+        flex-shrink: 0;
+      }
+      .detail-thumb-button { 
+        width: 56px; height: 56px;
+        padding: 0; 
+        border: 2px solid #dce8e2; 
+        border-radius: 10px; 
+        background: #ffffff; 
+        flex: 0 0 auto;
+        overflow: hidden;
+      }
+      .detail-thumb-button.active { border-color: #2B5B52; }
+      .detail-thumb { width: 100%; height: 100%; border: none; border-radius: 0; object-fit: cover; display: block; }
+      .detail-content { 
+        overflow-y: auto; 
+        padding: 0 16px 12px; 
+        flex: 1;
+      }
+      .detail-category { font-size: 11px; margin-top: 8px; }
+      .detail-title { font-size: 18px; margin: 4px 0; }
+      .detail-value { font-size: 20px; margin: 4px 0; }
+      .detail-grid { gap: 6px; margin-top: 8px; }
+      .detail-grid div { padding: 8px 10px; }
+      .detail-notes { margin-top: 8px; padding: 8px 10px; font-size: 12px; }
+      .ask { margin-top: 10px; padding: 12px; font-size: 15px; }
+      .close { margin: 8px 16px 12px; padding: 10px; font-size: 14px; }
       .modal-sheet .detail-thumbs { margin-left: 18px; margin-right: 18px; margin-top: 12px; }
       .modal-sheet .close { margin-bottom: 18px; }
       .handle { width: 42px; height: 4px; margin: 0 auto 14px; border-radius: 2px; background: #c7d8d3; }

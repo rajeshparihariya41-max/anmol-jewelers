@@ -123,7 +123,7 @@
       .grid { 
         display: grid; 
         grid-template-columns: repeat(2, minmax(0, 1fr)); 
-        gap: 10px; 
+        gap: 8px; 
         padding: 0 8px;
         grid-auto-rows: 1fr; 
         align-items: stretch; 
@@ -131,36 +131,34 @@
       .card {
         position: relative; 
         border: none;
-        border-radius: 20px; /* FIXED: pura card round */
+        border-radius: 16px;
         overflow: hidden;
         background: #ffffff; 
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
         display: flex; flex-direction: column; 
         height: 100%;
         width: 100%;
-        padding: 6px; /* FIXED: andar thoda gap taki photo ke 4 corner round dikhe */
       }
       .image-frame { 
-        aspect-ratio: 1 / 1;
+        aspect-ratio: 1 / 1; /* FIXED: square + lambi dono ko ek hi height me adjust - gap khatam */
         width: 100%;
         height: auto;
         background: #ffffff; 
         display: block;
         padding: 0;
         overflow: hidden; 
-        border-radius: 16px; /* FIXED: charo corner round - upar bhi neeche bhi */
+        border-radius: 16px 16px 0 0;
       }
       .photo { 
         width: 100%; 
         height: 100%; 
         padding: 0; 
-        object-fit: cover;
-        object-position: top center;
+        object-fit: cover; /* full width touch, no side gap */
+        object-position: top center; /* upar touch */
         display: block; 
-        border-radius: 16px; /* FIXED: photo bhi 4 corner round */
+        border-radius: 16px 16px 0 0;
         background: #ffffff;
       }
-      .card-body { padding: 8px 6px 2px; }
       .no-photo { color: var(--gold); font-family: Georgia, serif; font-size: 48px; }
       .heart {
         position: absolute; z-index: 1; top: 10px; left: 10px; width: 32px; height: 32px;

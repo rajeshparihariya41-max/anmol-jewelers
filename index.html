@@ -63,18 +63,20 @@
       .shop-name { font-size: 19px; letter-spacing: 2px; font-weight: 750; white-space: nowrap; text-transform: uppercase; color: var(--primary-strong); }
       .tagline { margin-top: 3px; color: var(--muted); font-size: 10px; letter-spacing: .3px; }
       .top-actions { display: flex; gap: 8px; }
-      .icon-button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #e8ece9; background: #ffffff; display: grid; place-items: center; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.06); } .icon-button .ui-icon { width: 18px; height: 18px; color: #0f5a4a; }
+      .icon-button {
+        width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 50%;
+        color: var(--primary); background: var(--card); display: grid; place-items: center;
+      }
       .ui-icon { width: 17px; height: 17px; display: block; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
       .button-icon { width: 15px; height: 15px; flex: 0 0 15px; }
-      /* PREMIUM BANNER - FIXED SIZE - NO CUT - CENTER - MATCH ADMIN */
-.hero { height: 140px; min-height: 140px; max-height: 140px; margin: 8px 14px; border-radius: 12px; background: #ffffff; position: relative; overflow: hidden; border: 1px solid #f0ebe3; } /* SAME AS ADMIN: Low height, wide width */
-      .hero-track { display: flex; width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.4,0,0.2,1); }
+      .hero { height: 180px; min-height: 180px; max-height: 180px; margin: 8px 12px; border-radius: 14px; background: #ffffff; position: relative; overflow: hidden; border: 0; }
+      .hero-track { display: flex; width: 100%; height: 100%; transition: transform 0.4s ease; }
       .hero-slide { min-width: 100%; width: 100%; height: 100%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #ffffff; }
-      .hero-slide img { width: 100%; height: 100%; object-fit: cover; object-position: center center; display: block; background: #ffffff; } /* SAME AS ADMIN PREVIEW: Wide, low height, center */ /* FIXED: Banner full visible, center, no cut, match admin */ /* FIXED: Banner full visible, not cropped */
+      .hero-slide img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; background: #ffffff; } /* MATCH ADMIN: Center, contain, no side white uneven, same as edit preview */ /* BANNER CENTER FIX: No white side gap, full width, center */ /* FIXED: Banner full visible, not cropped */
       .hero-slide-default { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 100%; padding: 22px 20px; }
-      .hero-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; }
-      .hero-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,0.2); transition: all 0.3s; }
-      .hero-dot.active { width: 20px; border-radius: 10px; background: #0f5a4a; }
+      .hero-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; }
+      .hero-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.6); border: 0; }
+      .hero-dot.active { width: 22px; border-radius: 10px; background: #fff; }
       .eyebrow, .section-label {
         color: var(--primary); font-size: 10px; font-weight: 750; letter-spacing: 2px;
       }
@@ -85,7 +87,7 @@
         display: grid; place-items: center; text-align: center; color: var(--primary);
         font-size: 11px; font-weight: 650; line-height: 1.35;
       }
-      .banner-row { display: flex; gap: 10px; padding: 0 16px 2px; overflow-x: auto; }
+      .banner-row { display: flex; overflow: hidden; }
       .banner {
         min-width: 292px; min-height: 106px; border: 1px solid var(--border); border-radius: 17px;
         background: var(--card); display: flex; overflow: hidden;
@@ -107,10 +109,13 @@
       .section-heading h2 { margin: 0; font-size: 22px; }
       .section-heading p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
       .section-accent { color: var(--primary); font-size: 13px; font-weight: 650; letter-spacing: 1px; }
-      .products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 12px; }
-      .product-card { background: #ffffff; border: 1px solid #f0ebe3; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 0 12px; }
+      .card {
+        position: relative; border: 1px solid #f0f0f0; border-radius: 12px; overflow: hidden;
+        background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      }
       .image-frame { height: 200px; position: relative; background: #ffffff; display: grid; place-items: center; padding: 8px; }
-      .product-image { width: 100%; height: 260px; min-height: 260px; max-height: 260px; background: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 16px 16px 0 0; } /* ETHERA LOGIC: White bg, fully visible, rounded */
+      .photo { width: 100%; height: 100%; padding: 0px; object-fit: contain; display: block; border-radius: 8px; background:#ffffff; } /* ETHERA LOGIC: White bg, fully visible, rounded */
       .no-photo { color: var(--gold); font-family: Georgia, serif; font-size: 48px; }
       .heart {
         position: absolute; z-index: 1; top: 10px; left: 10px; width: 32px; height: 32px;
@@ -121,15 +126,15 @@
         position: absolute; bottom: 9px; left: 9px; padding: 5px 9px; border-radius: 12px;
         color: #fff; background: var(--primary); font-size: 10px; font-weight: 650;
       }
-      .card-body { padding: 8px 12px 10px 12px; background: #ffffff; display: flex; flex-direction: column; gap: 3px; }
-      .item-category { font-size: 8px; font-weight: 700; color: #0f5a4a; text-transform: uppercase; letter-spacing: 0.8px; line-height: 1; margin: 0; }
-      .item-name { font-size: 12px; font-weight: 600; color: #1c1c1c; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 2px 0 0 0; }
-      .item-meta { font-size: 9px; color: #7a8a85; line-height: 1.2; display: flex; gap: 6px; }
-      .item-price { font-size: 11px; font-weight: 700; color: #0f2e26; line-height: 1.1; margin-top: 2px; } .item-price small { font-size: 8px; font-weight: 400; color: #7a8a85; }
+      .card-body { padding: 8px 10px; }
+      .item-category { color: var(--primary); font-size: 8px; text-transform: uppercase; letter-spacing: .6px; font-weight: 650; }
+      .item-name { min-height: 32px; margin: 2px 0 0; font-size: 12px; line-height: 1.25; font-weight: 550; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .item-meta { margin: 4px 0 0; color: var(--muted); font-size: 9px; }
+      .item-price { margin: 6px 0 0; font-size: 13px; font-weight: 750; display:flex; gap:6px; align-items:center; }
       .item-price .original { font-size:11px; color:#9aa8a4; text-decoration:line-through; font-weight:400; }
       .item-price .discounted { font-size:14px; color:#1e4b43; font-weight:800; }
       .item-price small { color: var(--muted); font-size: 9px; font-weight: 500; } /* Very small as requested */
-      .ask { width: 100%; margin-top: 8px; padding: 10px 12px; border: 0; border-radius: 12px; background: #0f5a4a; color: #ffffff; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: 0 2px 8px rgba(15,90,74,0.2); transition: all 0.2s; } .ask:hover { background: #0d443a; transform: translateY(-1px); } .ask:active { transform: translateY(0); } .ask .ui-icon { width: 14px; height: 14px; flex-shrink: 0; } .ask .button-icon { width: 14px; height: 14px; } .ask .ui-icon { width: 12px; height: 12px; } /* Small WhatsApp icon */
+      
       .empty {
         margin: 18px; padding: 26px; border-radius: 18px; background: var(--mint); text-align: center;
       }
@@ -173,7 +178,7 @@
       .estimate { background: var(--mint); }
       .estimate-label { color: var(--muted); font-size: 12px; }
       .estimate-value { font-size: 19px; font-weight: 750; }
-      .ask { width: 100%; margin-top: 8px; padding: 10px 12px; border: 0; border-radius: 12px; background: #0f5a4a; color: #ffffff; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: 0 2px 8px rgba(15,90,74,0.2); transition: all 0.2s; } .ask:hover { background: #0d443a; transform: translateY(-1px); } .ask:active { transform: translateY(0); } .ask .ui-icon { width: 14px; height: 14px; flex-shrink: 0; } .ask .button-icon { width: 14px; height: 14px; } .ask .ui-icon { width: 12px; height: 12px; } /* Small WhatsApp icon */
+      
       .disclaimer { margin: 10px 0 0; color: var(--muted); text-align: center; font-size: 10px; line-height: 1.5; }
       .quality { margin-top: 20px; padding: 14px 20px; border-top: 1px solid var(--border); text-align: center; }
       .quality .seal {
@@ -188,44 +193,54 @@
       footer p { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
       .footer-actions { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
       .footer-actions button { min-width: 122px; padding: 9px 15px; border-radius: 19px; font-size: 12px; font-weight: 650; }
-      .footer-wa { padding: 10px 18px; border-radius: 20px; border: 1px solid #0f5a4a; background: #0f5a4a; color: #ffffff; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; } .footer-wa .ui-icon { width: 16px; height: 16px; } .footer-wa .ui-icon { width: 14px; height: 14px; }
-      .footer-ig { padding: 10px 18px; border-radius: 20px; border: 1px solid #e8ece9; background: #ffffff; color: #0f5a4a; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; } .footer-ig .ui-icon { width: 16px; height: 16px; }
+      .footer-wa { border: 1px solid var(--whatsapp); background: var(--whatsapp); color: white; }
+      .footer-ig { border: 1px solid var(--border); background: var(--card); color: var(--primary); }
       .modal {
         position: fixed; inset: 0; z-index: 5; padding: 5vh 16px 0; background: rgba(43, 73, 67, .18);
         display: none; justify-content: center; align-items: flex-end;
       }
       .modal.open { display: flex; }
-      .modal-sheet { width: min(440px, 100%); max-height: 90vh; overflow-y: auto; overflow-x: hidden; padding: 0; border-radius: 20px 20px 0 0; background: #ffffff; box-shadow: 0 -10px 40px rgba(0,0,0,0.15); }
+      .modal-sheet {
+        width: min(680px, 100%); max-height: 91vh; overflow: auto; padding: 18px; border-radius: 26px 26px 0 0;
+        background: var(--background);
+      }
       .handle { width: 42px; height: 4px; margin: 0 auto 14px; border-radius: 2px; background: #c7d8d3; }
       .detail-image { height: 42vh; min-height: 260px; max-height: 380px; border-radius: 0px; background: #ffffff; display: block; overflow: hidden; margin: -20px -20px 12px -20px; } /* FIXED: Full bleed to border, no side white gap, smaller */
-      .detail-body { padding: 12px 16px 16px 16px; background: #ffffff; }
-.detail-image img { width: 100%; height: 100%; padding: 0px; object-fit: cover; background:#ffffff; display:block; } /* FIXED: Cover full width, no white gap, multi-color goes to border */
+      .detail-image img { width: 100%; height: 100%; padding: 0px; object-fit: cover; background:#ffffff; display:block; } /* FIXED: Cover full width, no white gap, multi-color goes to border */
       .detail-thumbs { display: flex; gap: 6px; padding: 6px 0 2px; overflow-x: auto; }
       .detail-thumb-button { padding: 0; border: 0; border-radius: 10px; background: transparent; }
       .detail-thumb { width: 58px; height: 58px; padding: 0; border: 2px solid var(--border); border-radius: 10px; background: var(--mint); object-fit: contain; }
       .detail-thumb.active { border-color: var(--primary); }
-      .detail-category { margin-top: 10px; color: var(--primary); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 650; }
+      .detail-category { font-size: 8px; color: #0f5a4a; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; margin: 0; line-height: 1.1; }
       .detail-title { margin: 4px 0 0; font-size: 16px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-      .detail-value { margin: 6px 0 0; font-size: 18px; font-weight: 750; } /* FIXED: Name and amount small */
-      .detail-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 10px; }
+       /* FIXED: Name and amount small */
+      
       .detail-cell { min-height: 40px; padding: 6px 8px; border-radius: 8px; background: var(--mint); }
       .detail-cell small { display: block; color: var(--muted); font-size: 9px; line-height:1.1; }
       .detail-cell strong { display: block; margin-top: 2px; font-size: 11px; line-height:1.2; } /* FIXED: Weight, Purity, Rate small */
       .detail-notes { margin: 16px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
-      .action-label { display: inline-flex; align-items: center; gap: 6px; justify-content: center; }
-      .close { width: 100%; margin-top: 8px; padding: 10px; border: 1px solid #e8ece9; border-radius: 12px; background: #ffffff; color: #5a6f6a; font-size: 13px; font-weight: 500; cursor: pointer; }
+      .action-label { display: inline-flex; align-items: center; gap: 7px; }
+      .close { width: 100%; margin-top: 8px; padding: 13px; border: 0; background: transparent; color: var(--muted); }
       .status { margin: 0 18px; color: var(--muted); font-size: 12px; text-align: center; }
       @media (min-width: 720px) {
-        .products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 12px; }
-        /* PREMIUM BANNER - FIXED SIZE - NO CUT - CENTER - MATCH ADMIN */
-.hero { height: 140px; min-height: 140px; max-height: 140px; margin: 8px 14px; border-radius: 12px; background: #ffffff; position: relative; overflow: hidden; border: 1px solid #f0ebe3; } /* SAME AS ADMIN: Low height, wide width */
+        .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .hero { height: 180px; min-height: 180px; max-height: 180px; margin: 8px 12px; border-radius: 14px; background: #ffffff; position: relative; overflow: hidden; border: 0; }
       }
       @media (max-width: 480px) {
         .topbar { padding-left: 16px; padding-right: 16px; }
         .shop-name { font-size: 16px; }
         .hero-badge { width: 76px; height: 76px; flex-basis: 76px; font-size: 10px; }
       }
-    @media (min-width: 768px) { .hero { height: 180px; min-height: 180px; max-height: 180px; } }
+    .product-value { font-size: 11px; font-weight: 700; color: #0f2e26; line-height: 1.1; }
+.detail-value { font-size: 13px; font-weight: 700; }
+.detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 4px; }
+.detail-cell { background: #f3f7f5; border-radius: 6px; padding: 5px 6px; }
+.detail-cell small { font-size: 7px; color: #6b7d77; text-transform: uppercase; }
+.detail-cell strong { font-size: 9px; color: #1a1a1a; }
+.whatsapp, .ask { width: 100%; margin-top: 6px; padding: 7px 8px; border: 0; border-radius: 8px; background: #0f5a4a; color: #fff; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.whatsapp .ui-icon, .ask .ui-icon { width: 12px; height: 12px; } /* Very small whatsapp icon */
+.product-wa { padding: 7px; font-size: 11px; }
+.product-wa .ui-icon { width: 12px; height: 12px; }
 </style>
   </head>
   <body>
@@ -306,8 +321,7 @@
             <span class="estimate-value" id="estimate-value">₹0</span>
           </div>
           <button class="whatsapp" type="button" id="old-gold-button">
-            <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.3 1.5 1.3 3 2.8 4s2.7 1.2 3.7.7l.8-1.1-2-1.1-.8.8c-.6-.2-1.5-1-1.8-1.6l.6-.8-1.1-1.9-1.2.4Z"></path></svg>
-            <span>Get price on WhatsApp</span>
+            <span class="action-label"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.3 1.5 1.3 3 2.8 4s2.7 1.2 3.7.7l.8-1.1-2-1.1-.8.8c-.6-.2-1.5-1-1.8-1.6l.6-.8-1.1-1.9-1.2.4Z"></path></svg>Get price on WhatsApp</span>
           </button>
           <p class="disclaimer">Final value subject to physical verification at store</p>
         </div>
@@ -329,8 +343,7 @@
         <p id="footer-phone"></p>
         <div class="footer-actions">
           <button class="footer-wa" type="button" id="footer-wa">
-            <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.3 1.5 1.3 3 2.8 4s2.7 1.2 3.7.7l.8-1.1-2-1.1-.8.8c-.6-.2-1.5-1-1.8-1.6l.6-.8-1.1-1.9-1.2.4Z"></path></svg>
-            <span>WhatsApp</span>
+            <span class="action-label"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.3 1.5 1.3 3 2.8 4s2.7 1.2 3.7.7l.8-1.1-2-1.1-.8.8c-.6-.2-1.5-1-1.8-1.6l.6-.8-1.1-1.9-1.2.4Z"></path></svg>WhatsApp</span>
           </button>
           <button class="footer-ig" type="button" id="footer-ig" hidden>
             <span class="action-label"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.7" r="1"></circle></svg>Instagram</span>
@@ -648,7 +661,16 @@
             ask.innerHTML = `<svg class="ui-icon button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M9 8.5c.3 1.5 1.3 3 2.8 4s2.7 1.2 3.7.7l.8-1.1-2-1.1-.8.8c-.6-.2-1.5-1-1.8-1.6l.6-.8-1.1-1.9-1.2.4Z"></path></svg><span>WhatsApp enquiry</span>`;
             ask.onclick = (event) => {
               event.stopPropagation();
-              openWhatsApp(`Namaste! *${catalog.shopName || DEFAULT_SHOP}* — mujhe "${item.name || 'jewellery item'}" ke baare me jaankari chahiye. (Catalogue se)`);
+              const price = calculateItemValue(item);
+              const priceVal = typeof price === 'object' ? price.discounted : price;
+              const photos = itemPhotos(item);
+              const mainPhoto = photos[0] || '';
+              const netW = item.netWeight ?? item.weight ?? 'N/A';
+              const purity = item.purity || '22K';
+              const wastage = item.wastagePercent || '0';
+              const cat = categoryName(item);
+              const msg = `*Anmol Jewelers - Enquiry*\n\n*Design:* ${item.name || cat}\n*Category:* ${cat}\n*Purity:* ${purity}\n*Net Weight:* ${netW}g\n*Wastage:* ${wastage}%\n*Price:* ${money(priceVal)}\n\n*Photo:* ${mainPhoto}\n\nPlease share more details.`;
+              openWhatsApp(msg);
             };
             body.append(ask);
             card.append(body);
@@ -790,7 +812,35 @@
           notes.textContent = item.notes || '';
           notes.hidden = !item.notes;
           $('modal').classList.add('open');
-          $('detail-wa').onclick = () => openWhatsApp(`Namaste! I want details for ${item.name || 'this jewellery item'}.`);
+          $('detail-wa').onclick = () => {
+          const item = selectedItem;
+          if (!item) return;
+          const price = calculateItemValue(item);
+          const priceVal = typeof price === 'object' ? price.discounted : price;
+          const photos = itemPhotos(item);
+          const mainPhoto = photos[0] || '';
+          const netW = item.netWeight ?? item.weight ?? 'N/A';
+          const grossW = item.grossWeight ?? '';
+          const purity = item.purity || '22K';
+          const wastage = item.wastagePercent || '0';
+          const making = item.makingChargeAmount || item.makingChargePercent || '0';
+          const cat = categoryName(item);
+          const msg = `*Anmol Jewelers - Enquiry*
+
+*Design:* ${item.name || cat}
+*Category:* ${cat}
+*Purity:* ${purity}
+*Net Weight:* ${netW}g
+${grossW ? '*Gross Weight:* '+grossW+'g
+' : ''}*Wastage:* ${wastage}%
+*Making:* ₹${making}
+*Approx Price:* ${money(priceVal)}
+
+*Photo:* ${mainPhoto}
+
+Please share more details.`;
+          openWhatsApp(msg);
+        };
         }
 
         async function loadCatalog() {

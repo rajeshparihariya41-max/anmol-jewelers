@@ -329,6 +329,9 @@
       .detail-category { margin-top: 4px; color: var(--primary); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 650; }
       .detail-title { margin: 4px 0 0; font-size: 16px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .detail-value { margin: 6px 0 0; font-size: 18px; font-weight: 750; } /* FIXED: Name and amount small */
+      .detail-value .original { display:block; margin-bottom:2px; color:#9aa8a4; font-size:12px; font-weight:500; text-decoration:line-through; }
+      .detail-value .discounted { display:block; color:#1e4b43; font-size:22px; font-weight:850; line-height:1.1; }
+      .detail-value .discount-note { display:block; margin-top:2px; color:var(--muted); font-size:9px; font-weight:500; }
       .detail-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; margin-top: 4px; }
       .detail-cell { min-height: 40px; padding: 6px 8px; border-radius: 8px; background: var(--mint); }
       .detail-cell small { display: block; color: var(--muted); font-size: 9px; line-height:1.1; }
@@ -584,7 +587,7 @@
           } else {
             base = Number(item.approxPrice) || 0;
           }
-          const discPct = Number(item.discountPercent || 0);
+          const discPct = Math.max(0, Math.min(100, Number(item.discountPercent || 0)));
           const discAmt = Number(item.discountAmount || 0);
           let discounted = base;
           if (discPct > 0) discounted = base * (1 - discPct / 100);
@@ -771,7 +774,11 @@
             card.append(frame);
             const body = document.createElement('div');
             body.className = 'card-body';
-            body.innerHTML = `<div class="item-category">${escapeText(categoryName(item))}</div><div class="item-name">${escapeText(item.name || 'Jewellery item')}</div><div class="item-meta">${escapeText([weight(item.netWeight ?? item.weight), item.purity].filter(Boolean).join(' · '))}</div><div class="item-price">${money(calculateItemValue(item))}<small> approx.</small></div>`;
+            const cardPrice = calculateItemValue(item);
+            const cardPriceMarkup = cardPrice.hasDiscount
+              ? `<span class="original">${money(cardPrice.original)}</span><span class="discounted">${money(cardPrice.discounted)}</span><small>${Number(item.discountPercent || 0) > 0 ? `${Number(item.discountPercent)}% off` : 'Offer price'}</small>`
+              : `<span class="discounted">${money(cardPrice.discounted)}</span><small>approx.</small>`;
+            body.innerHTML = `<div class="item-category">${escapeText(categoryName(item))}</div><div class="item-name">${escapeText(item.name || 'Jewellery item')}</div><div class="item-meta">${escapeText([weight(item.netWeight ?? item.weight), item.purity].filter(Boolean).join(' · '))}</div><div class="item-price">${cardPriceMarkup}</div>`;
             const ask = document.createElement('button');
             ask.className = 'ask';
             ask.type = 'button';
@@ -826,14 +833,14 @@
           // FIXED: Try direct key, then fallback to goldRate999 calculation, then goldRate, then any available rate
           let rate = Number(rates[option.key] || 0);
           if (rate > 0) return rate;
-          // Fallback: calculate from 999 rate
-          const gold999 = Number(rates.goldRate999 || rates.goldRate || 0);
-          if (gold999 > 0) {
-            return Math.round((gold999 * option.purity) / 999);
-          }
-          // Last fallback: try any gold rate available
-          const anyRate = Number(rates.goldRate || rates.gold20k || rates.gold18k || 0);
-          if (anyRate > 0) return anyRate;
+          // Convert an available karat rate to a 999 basis before estimating
+          // a different purity; 22K must not be treated as 24K.
+          const gold999 = Number(rates.goldRate999 || 0);
+          const gold24From22k = Number(rates.goldRate || 0) / 0.916;
+          const gold24From20k = Number(rates.gold20k || 0) / 0.8333;
+          const gold24From18k = Number(rates.gold18k || 0) / 0.75;
+          const gold24 = gold999 || gold24From22k || gold24From20k || gold24From18k;
+          if (gold24 > 0) return Math.round((gold24 * option.purity) / 999);
           return 0;
         }
         
@@ -927,7 +934,10 @@
           const dPrice = calculateItemValue(item);
           const dVal = typeof dPrice === 'object' ? dPrice : { original: dPrice, discounted: dPrice, hasDiscount: false };
           if (dVal.hasDiscount) {
-            $('detail-value').innerHTML = `<span class=\"original\">${money(dVal.original)}</span> <span class=\"discounted\">${money(dVal.discounted)}</span>`;
+            const discountLabel = Number(item.discountPercent || 0) > 0
+              ? `${Number(item.discountPercent)}% discount`
+              : 'Special price';
+            $('detail-value').innerHTML = `<span class="original">${money(dVal.original)}</span><span class="discounted">${money(dVal.discounted)}</span><span class="discount-note">${discountLabel}</span>`;
           } else {
             $('detail-value').textContent = money(dVal.discounted);
           }
@@ -937,11 +947,10 @@
           if (rate > 0) detailRows.push(['Rate / gram', money(rate)]);
           if (item.grossWeight) detailRows.push(['Gross weight', weight(item.grossWeight)]);
           if (item.netWeight ?? item.weight) detailRows.push(['Net weight', weight(item.netWeight ?? item.weight)]);
-          const makingAmt = Number(item.makingChargeAmount || 0);
+          const makingAmt = Number(item.makingChargeAmount ?? item.makingChargePercent ?? 0);
           if (makingAmt > 0) detailRows.push(['Making', money(makingAmt)]);
           if (Number(item.wastagePercent || 0) > 0) detailRows.push(['Wastage', `${Number(item.wastagePercent || 0)}%`]);
           if (Number(item.discountPercent || 0) > 0) detailRows.push(['Discount', `${Number(item.discountPercent)}%`]);
-          else if (Number(item.discountAmount || 0) > 0) detailRows.push(['Discount', money(Number(item.discountAmount))]);
 
           const detailGrid = $('detail-grid');
           detailGrid.replaceChildren();
@@ -967,7 +976,10 @@
           };
         }
 
-        async function loadCatalog() {
+        let catalogRequestInFlight = false;
+        async function loadCatalog(silent = false) {
+          if (catalogRequestInFlight) return;
+          catalogRequestInFlight = true;
           try {
             // FIXED: Fetch with no-cache and handle both wrapped and direct JSON
             const response = await fetch(`${API_URL}?t=${Date.now()}`, { 
@@ -995,10 +1007,22 @@
             }
           } catch (error) {
             console.error('Catalog load failed:', error);
-            catalog = fallbackCatalog;
-            $('status').textContent = 'Catalogue update होते ही यहाँ आपके designs दिखेंगे. Error: ' + (error.message || 'unknown');
-            // Keep status visible for 3 sec then hide
-            setTimeout(() => { if (catalog.items.length === 0) $('status').textContent = 'New designs coming soon - Admin se publish karein'; }, 1000);
+            if (!silent) {
+              catalog = fallbackCatalog;
+              $('status').textContent = 'Catalogue update होते ही यहाँ आपके designs दिखेंगे. Error: ' + (error.message || 'unknown');
+              // Keep status visible for 3 sec then hide
+              setTimeout(() => { if (catalog.items.length === 0) $('status').textContent = 'New designs coming soon - Admin se publish karein'; }, 1000);
+            }
+          } finally {
+            catalogRequestInFlight = false;
+          }
+          if (selectedItem) {
+            const refreshedItem = (catalog.items || []).find((item) => item.id === selectedItem.id);
+            if (refreshedItem) openDetail(refreshedItem);
+            else {
+              selectedItem = null;
+              $('modal').classList.remove('open');
+            }
           }
           renderHeader();
           renderBanners();
@@ -1033,6 +1057,12 @@
         $('close-modal').onclick = () => $('modal').classList.remove('open');
         $('modal').onclick = (event) => { if (event.target === $('modal')) $('modal').classList.remove('open'); };
         loadCatalog();
+        const refreshLiveCatalog = () => {
+          if (!document.hidden) void loadCatalog(true);
+        };
+        window.setInterval(refreshLiveCatalog, 60_000);
+        window.addEventListener('focus', refreshLiveCatalog);
+        document.addEventListener('visibilitychange', refreshLiveCatalog);
       })();
     </script>
   </body>

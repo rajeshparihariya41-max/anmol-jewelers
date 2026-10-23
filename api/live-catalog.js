@@ -33,17 +33,7 @@ export default async function handler(req, res) {
       });
       
       if (!response.ok) {
-        return res.status(200).json({ 
-          shopName: "Anmol Jewelers",
-          phone: "",
-          address: null,
-          city: null,
-          metalRates: { goldRate: 0, goldRate999: 0, gold20k: 0, gold18k: 0, silverRate999: 0 },
-          categories: [],
-          items: [],
-          banners: [],
-          updatedAt: new Date().toISOString()
-        });
+        return res.status(502).json({ error: `Catalogue source returned ${response.status}` });
       }
       
       const data = await response.json();
@@ -70,10 +60,11 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     try {
-      const { publicId } = req.body || {};
-      if (publicId) {
-        await cloudinary.uploader.destroy(publicId, { resource_type: 'image', invalidate: true });
+      const publicId = String(req.body?.publicId || '');
+      if (!publicId.startsWith(`${PHOTO_FOLDER}/`) || publicId.includes('..')) {
+        return res.status(400).json({ error: 'Only catalogue photo assets can be deleted' });
       }
+      await cloudinary.uploader.destroy(publicId, { resource_type: 'image', invalidate: true });
       return res.status(200).json({ success: true });
     } catch (e) {
       return res.status(500).json({ error: e.message });
